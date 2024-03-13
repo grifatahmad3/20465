@@ -21,20 +21,24 @@ void print_in_binary(unsigned int num){
 
 
 unsigned int my_add(unsigned int a, unsigned int b){
-    unsigned int result = 0, carry = 0;
-    int i;
+    unsigned int carry = 0;
 
-    printf("\nFirst number: ");
+    printf("\nIn binary:\nFirst number: ");
     print_in_binary(a);
     printf(",\nSecond number: ");
     print_in_binary(b);
 
-    result = a + b; /*Fix here*/
+
+    while (b != 0) { /*Binary addition*/
+        carry = (a & b) << 1;
+        a = a ^ b;
+        b = carry;
+    }
 
     printf(",\nResult: ");
-    print_in_binary(result);
+    print_in_binary(a);
 
-    return result;
+    return a;
 }
 
 void welcome_message(void){
