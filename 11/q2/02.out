@@ -3,12 +3,29 @@ Hello!
 Please enter a letter followed by a line which you would like to find all
 suffixes that start with that letter in:
 
-You entered the letter '
-', and the line:
-c
+You entered the letter 'c', and the line:
+ccccccccccccccccccc
 
 The suffixes are:
+cccccccccccccccccc
+ccccccccccccccccc
+cccccccccccccccc
+ccccccccccccccc
+cccccccccccccc
+ccccccccccccc
+cccccccccccc
+ccccccccccc
+cccccccccc
+ccccccccc
+cccccccc
+ccccccc
+cccccc
+ccccc
+cccc
+ccc
+cc
+c
 
-and they are 0 in number.
+and they are 18 in number.
 
 Have a nice day.
