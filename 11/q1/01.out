@@ -1,0 +1,19 @@
+
+Hello.
+Here you enter two unsigned numbers to add.
+The numbers are to be decimal and up to 6 digits in width.
+Enter the numbers please:
+
+First number is 13, second number is 19.
+
+In binary:
+First number: 00000000000000000000000000001101,
+Second number: 00000000000000000000000000010011,
+Result: 00000000000000000000000000100000
+
+In summary:
+first number was 13,
+Second number was 19,
+The result of the addition is 32.
+
+Have a nice day.

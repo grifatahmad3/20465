@@ -1,0 +1,19 @@
+
+Hello.
+Here you enter two unsigned numbers to add.
+The numbers are to be decimal and up to 6 digits in width.
+Enter the numbers please:
+
+First number is 7, second number is 313.
+
+In binary:
+First number: 00000000000000000000000000000111,
+Second number: 00000000000000000000000100111001,
+Result: 00000000000000000000000101000000
+
+In summary:
+first number was 7,
+Second number was 313,
+The result of the addition is 320.
+
+Have a nice day.
