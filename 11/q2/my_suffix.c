@@ -35,6 +35,8 @@ int main(void){
     int i=0, suffixes;
 
     welcome_message();
+	while((k=getchar())==' '|| k=='\t' || k=='\n')
+        ;
     c = getchar();
     while((k=getchar())==' '|| k=='\t' || k=='\n')
         ;

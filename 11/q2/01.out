@@ -1,0 +1,15 @@
+
+Hello!
+Please enter a letter followed by a line which you would like to find all
+suffixes that start with that letter in:
+
+You entered the letter 'b', and the line:
+abrahmrnsbre
+
+The suffixes are:
+brahmrnsbre
+bre
+
+and they are 2 in number.
+
+Have a nice day.
