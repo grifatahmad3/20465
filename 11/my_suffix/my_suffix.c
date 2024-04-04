@@ -10,7 +10,7 @@
 #define MAX 128
 
 int my_suffix(char str[], char c){
-    int num = 0, i=1;
+    int num = 0, i=0;
     if(str[0]=='\0') return 0;
     while(str[i]!='\0'){
         if(str[i]==c){
