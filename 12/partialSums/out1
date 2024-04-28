@@ -1,0 +1,14 @@
+
+		Welcome!
+Please enter the size of the array followed by
+the array elements:
+
+Thank you!
+Here are the results:
+
+Array size = 8
+Original array: 3 5 1 -15 10 -1 10 14 
+The partial sums array: 3 8 9 -6 4 3 13 27 
+
+Hopefully that was helpful.
+See you next time!

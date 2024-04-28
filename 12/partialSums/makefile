@@ -1,0 +1,12 @@
+CC = gcc
+OBJS = partialSums.o
+EXEC = partialSums
+DEBUG_FLAG = -g
+COMP_FLAG = -ansi -Wall -pedantic
+
+$(EXEC) : $(OBJS)
+	$(CC) $(DEBUG_FLAG) $(COMP_FLAG) $(OBJS) -o $@
+partialSums.o : partialSums.c
+	$(CC) -c $(COMP_FLAG) $*.c
+clean : 
+	rm -f $(OBJS) $(EXEC)
