@@ -13,9 +13,13 @@
 /*End Messages*/
 
 
-/* Constants */
+/* Definitions */
 #define MAX_LENGTH 100
-/*End Constants*/
+typedef enum _bool {
+    false,
+    true
+} bool;
+/*End Definitions*/
 
 
 /* Structs */
@@ -35,6 +39,9 @@ typedef struct _symbol{
 
     /*Adds the needed file extension to the file name*/
 char* addExtToFilename(char* ext, char* fileName, int num);
+
+    /*Checks whether the macro was defined before or not*/
+bool definedMacroName(Macro *head, char* name);
 
     /*prints the macros*/
 void printMacros(Macro* head);

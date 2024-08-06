@@ -15,14 +15,31 @@ char* addExtToFilename(char* ext, char* fileName, int num){
 }
 
 
+bool definedMacroName(Macro *head, char* name){
+    Macro *temp = (Macro *) malloc(sizeof(Macro));
+    temp = head;
+    while (temp != NULL)
+    {
+        if(!strcmp(temp->name, name)){
+            free(temp);
+            return true;
+        }
+        temp = head->next;
+    }
+    free(temp);
+    return false;
+}
+
 void printMacros(Macro *head){
-    while(head != NULL){
+    Macro *temp = (Macro *) malloc(sizeof(Macro));
+    temp = head;
+    while(temp != NULL){
         printf("Macro:\n");
-        printf("%s", head->name);
+        printf("%s", temp->name);
         printf("\n");
-        printf("%s", head->definition);
+        printf("%s", temp->definition);
         printf("\n\n");
-        head = head->next;
+        temp = head->next;
     }
 }
 /*End Functions*/
