@@ -10,8 +10,29 @@
 /* Messages */
 #define PREASSM_START "Starting Pre-Assembler...\n"
 #define PREASSM_END "Pre-Assembler finished successfully!\n"
+/*End Messages*/
 
 
+/* Constants */
+#define MAX_LENGTH 50
+/*End Constants*/
 
+
+/* Structs */
+typedef struct _macro {
+    char name[MAX_LENGTH];
+    char definition[MAX_LENGTH];
+    struct _macro* next;
+} Macro;
+
+typedef struct _symbol{
+    char name[MAX_LENGTH];
+} Symbol;
+/*End Structs*/
+
+
+/*Functions*/
+void printMacros(Macro* head);
+/*End Functions*/
 
 #endif
