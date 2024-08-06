@@ -7,15 +7,17 @@
 int main(int argc, char *argv[]){
    
     int i = 1;
-    char *file = NULL;
-    
+    char *file;
 
     while(i < argc){
         printf(PREASSM_START);
         /*start preassm*/
-        file = addExtToFilename(".asm", argv[i], 4);
+        file = addExtToFilename(EXT_ORIGIN, argv[i], strlen(EXT_ORIGIN));
         printf("\n%s\n\n", file);
-        startPreAsm();
+        if(startPreAsm(file) == false){
+            printf(FILE_ERROR);
+            return -1;
+            }
         printf(PREASSM_END);
         i++;
     }

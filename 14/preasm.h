@@ -2,6 +2,8 @@
 #ifndef PREASSMH
 #define PREASSMH
 
-void startPreAsm();
+#include "essentials.h"
+
+bool startPreAsm(char* filename);
 
 #endif

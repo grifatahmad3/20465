@@ -3,10 +3,18 @@
 #include "essentials.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
-void startPreAsm(){
-    Macro *new_macro = newMacro("Macro1", "Line1\nLine2\nLine3", NULL);
-    printMacros(new_macro);
-    if(new_macro!=NULL)
-        free(new_macro);
+bool startPreAsm(char* filename){
+    char str[MAX_LENGTH];
+    FILE *fp;
+    fp = fopen(filename, "r");
+    if(fp==NULL)
+        return false;
+    while (fgets(str, MAX_LENGTH, fp) != NULL){
+        printf("%s", str);
+    }
+    fclose(fp);
+    printf("\n\n");
+    return true;
 }

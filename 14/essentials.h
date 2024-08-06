@@ -14,11 +14,17 @@
 
 /*Errors*/
 #define NAME_TOO_LONG "Overflow: The instruction name is too long!"
+#define FILE_ERROR "File Error! Can't open file!!"
 /*End Errors*/
 
 
 /* Definitions */
 #define MAX_LENGTH 100
+#define EXT_ORIGIN ".as"
+#define EXT_PREASM ".am"
+#define EXT_OBJECT ".ob"
+#define EXT_ENTRIES ".ent"
+#define EXT_EXTERNALS ".ext"
 
 typedef enum _bool {
     false,
