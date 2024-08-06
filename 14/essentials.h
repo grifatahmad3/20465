@@ -14,7 +14,7 @@
 
 
 /* Constants */
-#define MAX_LENGTH 50
+#define MAX_LENGTH 100
 /*End Constants*/
 
 
@@ -32,7 +32,13 @@ typedef struct _symbol{
 
 
 /*Functions*/
+
+    /*Adds the needed file extension to the file name*/
+char* addExtToFilename(char* ext, char* fileName, int num);
+
+    /*prints the macros*/
 void printMacros(Macro* head);
+
 /*End Functions*/
 
 #endif
