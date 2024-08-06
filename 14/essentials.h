@@ -15,6 +15,7 @@
 
 /* Definitions */
 #define MAX_LENGTH 100
+
 typedef enum _bool {
     false,
     true

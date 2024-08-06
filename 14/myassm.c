@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
     char *file;
     Macro *new_macro = (Macro*) malloc(sizeof(Macro));
     strcpy(new_macro->name, "Macro1");
-    strcpy(new_macro->definition, "Nothing");
+    strcpy(new_macro->definition, "Line1\nLine2\nLine3");
     new_macro->next=NULL;
     
 
