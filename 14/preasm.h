@@ -2,8 +2,6 @@
 #ifndef PREASSMH
 #define PREASSMH
 
-
-
-
+void startPreAsm();
 
 #endif

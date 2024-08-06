@@ -1,5 +1,5 @@
 CC = gcc
-OBJS = myassm.o essentials.o
+OBJS = myassm.o preasm.o essentials.o
 EXEC = myassm
 DEBUG_FLAG = -g
 COMP_FLAG = -ansi -Wall -pedantic
@@ -8,7 +8,11 @@ VALGRIND_FLAGS = --leak-check=full --show-leak-kinds=all --track-origins=yes --v
 
 $(EXEC) : $(OBJS)
 	$(CC) $(DEBUG_FLAG) $(COMP_FLAG) $(OBJS) -o $@
-myassm.o : myassm.c essentials.h
+myassm.o : myassm.c preasm.h essentials.h
+	$(CC) -c $(COMP_FLAG) $*.c
+preasm.o : preasm.c preasm.h essentials.h
+	$(CC) -c $(COMP_FLAG) $*.c
+essentials.o : essentials.c essentials.h
 	$(CC) -c $(COMP_FLAG) $*.c
 clean : 
 	rm -f $(EXEC) $(ASSM_OUTPUT)
