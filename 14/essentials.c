@@ -5,6 +5,29 @@
 #include <stdlib.h>
 #include "essentials.h"
 
+/*Objects*/
+
+op operations[OP_NUM] = {
+    {"mov", 0},
+    {"cmp", 1},
+    {"add", 2},
+    {"sub", 3},
+    {"lea", 4},
+    {"clr", 5},
+    {"not", 6},
+    {"inc", 7},
+    {"dec", 8},
+    {"jmp", 9},
+    {"bne", 10},
+    {"red", 11},
+    {"prn", 12},
+    {"jsr", 13},
+    {"rts", 14},
+    {"stop", 15}
+};
+
+/*End Objects*/
+
 /*Functions*/
 
 char* addExtToFilename(char* ext, char* fileName, int num){
@@ -15,8 +38,8 @@ char* addExtToFilename(char* ext, char* fileName, int num){
 }
 
 bool isOP(char *str){
-    int i = 0;
-    for(i; i<OP_NUM; i++){
+    int i;
+    for(i = 0; i<OP_NUM; i++){
         if(strcmp(str, operations[i].name) != 0)
             return false;
     }
@@ -41,7 +64,7 @@ bool isMacro(Macro *head, char* name){
 Macro* newMacro(char* name, char* definition, Macro *next){
     Macro *new_macro = (Macro*) malloc(sizeof(Macro));
     strcpy(new_macro->name, name);
-    // TODO : fix copying the definition
+    /* TODO : fix copying the definition*/
     strcpy(new_macro->definition, definition);
     new_macro->next=next;
     return new_macro;

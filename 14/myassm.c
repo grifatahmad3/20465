@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
         /*start preassm*/
         file = addExtToFilename(EXT_ORIGIN, argv[i], strlen(EXT_ORIGIN));
         printf("\n%s\n\n", file);
-        if(startPreAsm(file) == false){
+        if(startPreAsm(argv[i]) == false){
             printf(FILE_ERROR);
             return -1;
             }

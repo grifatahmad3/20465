@@ -21,7 +21,7 @@
 /* Definitions */
 #define MAX_LENGTH 100
 #define MAX_LINE 82 /* 80 + '\n' + '\0' */
-#define OP_NUM 15
+#define OP_NUM 16
 #define EXT_ORIGIN ".as"
 #define EXT_PREASM ".am"
 #define EXT_OBJECT ".ob"
@@ -52,33 +52,13 @@ typedef struct _op {
     char* name;
     int opcode;
 } op;
+
+
+typedef struct _err{
+    char *errmsg;
+    struct _err* next;
+} err;
 /*End Structs*/
-
-
-
-/*Objects*/
-
-op operations[] = {
-    {"mov", 0},
-    {"cmp", 1},
-    {"add", 2},
-    {"sub", 3},
-    {"lea", 4},
-    {"clr", 5},
-    {"not", 6},
-    {"inc", 7},
-    {"dec", 8},
-    {"jmp", 9},
-    {"bne", 10},
-    {"red", 11},
-    {"prn", 12},
-    {"jsr", 13},
-    {"rts", 14},
-    {"stop", 15}
-};
-
-
-/*End Objects*/
 
 /*Functions*/
 
