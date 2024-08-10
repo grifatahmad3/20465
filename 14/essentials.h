@@ -20,16 +20,13 @@
 
 /* Definitions */
 #define MAX_LENGTH 100
+#define MAX_LINE 82 /* 80 + '\n' + '\0' */
+#define OP_NUM 15
 #define EXT_ORIGIN ".as"
 #define EXT_PREASM ".am"
 #define EXT_OBJECT ".ob"
 #define EXT_ENTRIES ".ent"
 #define EXT_EXTERNALS ".ext"
-
-typedef enum _bool {
-    false,
-    true
-} bool;
 /*End Definitions*/
 
 
@@ -43,8 +40,45 @@ typedef struct _macro {
 typedef struct _symbol{
     char name[MAX_LENGTH];
 } Symbol;
+
+
+typedef enum _bool {
+    false,
+    true
+} bool;
+
+
+typedef struct _op {
+    char* name;
+    int opcode;
+} op;
 /*End Structs*/
 
+
+
+/*Objects*/
+
+op operations[] = {
+    {"mov", 0},
+    {"cmp", 1},
+    {"add", 2},
+    {"sub", 3},
+    {"lea", 4},
+    {"clr", 5},
+    {"not", 6},
+    {"inc", 7},
+    {"dec", 8},
+    {"jmp", 9},
+    {"bne", 10},
+    {"red", 11},
+    {"prn", 12},
+    {"jsr", 13},
+    {"rts", 14},
+    {"stop", 15}
+};
+
+
+/*End Objects*/
 
 /*Functions*/
 
@@ -52,7 +86,11 @@ typedef struct _symbol{
 char* addExtToFilename(char* ext, char* fileName, int num);
 
     /*Checks whether the macro was defined before or not*/
-bool definedMacroName(Macro *head, char* name);
+bool isMacro(Macro *head, char* name);
+
+
+    /*Checks whther the given string is an operation or not*/
+bool isOP(char *str);
 
 
     /*Makes and returns a new macro based on user input*/

@@ -14,9 +14,17 @@ char* addExtToFilename(char* ext, char* fileName, int num){
     return temp;
 }
 
+bool isOP(char *str){
+    int i = 0;
+    for(i; i<OP_NUM; i++){
+        if(strcmp(str, operations[i].name) != 0)
+            return false;
+    }
+    return true;
+}
 
-bool definedMacroName(Macro *head, char* name){
-    Macro *temp = (Macro *) malloc(sizeof(Macro));
+bool isMacro(Macro *head, char* name){
+    Macro *temp; /*= (Macro *) malloc(sizeof(Macro));*/
     temp = head;
     while (temp != NULL)
     {
@@ -24,7 +32,7 @@ bool definedMacroName(Macro *head, char* name){
             free(temp);
             return true;
         }
-        temp = head->next;
+        temp = temp->next;
     }
     free(temp);
     return false;
@@ -33,6 +41,7 @@ bool definedMacroName(Macro *head, char* name){
 Macro* newMacro(char* name, char* definition, Macro *next){
     Macro *new_macro = (Macro*) malloc(sizeof(Macro));
     strcpy(new_macro->name, name);
+    // TODO : fix copying the definition
     strcpy(new_macro->definition, definition);
     new_macro->next=next;
     return new_macro;
