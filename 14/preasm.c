@@ -18,11 +18,12 @@ Bool startPreAsm(char* filename){
        9- eof
     */
 
-
-    char *filer, *filew;
+    ERR *head;
+    char *filer, *filew; /*filer = file to read, filew = file to write*/
     char str[MAX_LENGTH];
-    FILE *fpr, *fpw;
+    FILE *fpr, *fpw; /*fpr = file pointer to read, fpw = file pointer to write*/
 
+    head = NULL;
     filer = addExtToFilename(EXT_ORIGIN, filename, strlen(EXT_ORIGIN));
     filew = addExtToFilename(EXT_PREASM, filename, strlen(EXT_PREASM));
     fpr = fopen(filer, "r");
@@ -35,9 +36,18 @@ Bool startPreAsm(char* filename){
         fputs(str, fpw);
     }
 
-
     fclose(fpw);
     fclose(fpr);
     printf("\n\n");
+
+
+    if(!addERR(head, "error message 01"))
+        return false;
+    if(!addERR(head, NAME_TOO_LONG))
+        return false;
+    if(!addERR(head, FILE_ERROR))
+        return false;
+    printERR(head);
+
     return true;
 }

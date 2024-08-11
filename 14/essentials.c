@@ -26,6 +26,7 @@ OP operations[OP_NUM] = {
     {"stop", 15}
 };
 
+
 /*End Objects*/
 
 /*Functions*/
@@ -82,5 +83,58 @@ void printMacros(Macro *head){
         temp = head->next;
     }
     free(temp);
+}
+
+Bool addERR(ERR *head, char* msg){
+    ERR *temp;
+    temp = head;
+    if(head == NULL){
+        printf("L1");
+        head = (ERR*)malloc(sizeof(ERR));
+        if(head==NULL){
+            printf("\n!!ERR ALLOCATION ERR!!\n");
+            return false;
+        }
+        head->errmsg = (char*) malloc(strlen(msg));
+        if(head->errmsg==NULL){
+            printf("\n!!ERR ALLOCATION ERR!!\n");
+            return false;
+        }
+        strcpy(head->errmsg, msg);
+        head->next=NULL;
+        printf("L2");
+        return true;
+    }
+    else{
+        while(temp->next!=NULL){
+            printf("L3");
+            temp = temp->next;
+        }
+        printf("L4");
+        temp->next = (ERR*)malloc(sizeof(ERR));
+        if(temp==NULL){
+            printf("\n!!ERR ALLOCATION ERR!!\n");
+            return false;
+        }
+        temp = temp->next;
+        temp->errmsg = (char*) malloc(strlen(msg));
+        if(temp->errmsg==NULL){
+            printf("\n!!ERR ALLOCATION ERR!!\n");
+            return false;
+        }
+        strcpy(temp->errmsg, msg);
+        temp->next=NULL;
+        printf("L5");
+        return true;
+    }
+}
+
+void printERR(ERR *head){
+    ERR *temp;
+    temp = head;
+    while(temp != NULL){
+        printf("\n%s\n", temp->errmsg);
+        temp = temp->next;
+    }
 }
 /*End Functions*/
