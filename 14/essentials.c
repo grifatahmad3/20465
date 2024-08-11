@@ -7,7 +7,7 @@
 
 /*Objects*/
 
-op operations[OP_NUM] = {
+OP operations[OP_NUM] = {
     {"mov", 0},
     {"cmp", 1},
     {"add", 2},
@@ -37,7 +37,7 @@ char* addExtToFilename(char* ext, char* fileName, int num){
     return temp;
 }
 
-bool isOP(char *str){
+Bool isOP(char *str){
     int i;
     for(i = 0; i<OP_NUM; i++){
         if(strcmp(str, operations[i].name) != 0)
@@ -46,7 +46,7 @@ bool isOP(char *str){
     return true;
 }
 
-bool isMacro(Macro *head, char* name){
+Bool isMacro(Macro *head, char* name){
     Macro *temp; /*= (Macro *) malloc(sizeof(Macro));*/
     temp = head;
     while (temp != NULL)

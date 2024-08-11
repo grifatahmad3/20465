@@ -45,19 +45,19 @@ typedef struct _symbol{
 typedef enum _bool {
     false,
     true
-} bool;
+} Bool;
 
 
 typedef struct _op {
     char* name;
     int opcode;
-} op;
+} OP;
 
 
 typedef struct _err{
     char *errmsg;
     struct _err* next;
-} err;
+} ERR;
 /*End Structs*/
 
 /*Functions*/
@@ -66,11 +66,11 @@ typedef struct _err{
 char* addExtToFilename(char* ext, char* fileName, int num);
 
     /*Checks whether the macro was defined before or not*/
-bool isMacro(Macro *head, char* name);
+Bool isMacro(Macro *head, char* name);
 
 
     /*Checks whther the given string is an operation or not*/
-bool isOP(char *str);
+Bool isOP(char *str);
 
 
     /*Makes and returns a new macro based on user input*/

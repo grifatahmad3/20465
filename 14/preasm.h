@@ -4,6 +4,6 @@
 
 #include "essentials.h"
 
-bool startPreAsm(char* filename);
+Bool startPreAsm(char* filename);
 
 #endif

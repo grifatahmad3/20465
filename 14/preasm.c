@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-bool startPreAsm(char* filename){
+Bool startPreAsm(char* filename){
 
     /* 1- Read next line, if EOF jump to 9
        2- is first word a defined macro? if yes, replace the name with the definition, and go back to 1. else move on.
