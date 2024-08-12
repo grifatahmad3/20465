@@ -32,13 +32,13 @@
 
 /* Structs */
 typedef struct _macro {
-    char name[MAX_LENGTH];
-    char definition[MAX_LENGTH];
+    char *name;
+    char *definition;
     struct _macro* next;
 } Macro;
 
 typedef struct _symbol{
-    char name[MAX_LENGTH];
+    char *name;
 } Symbol;
 
 
@@ -69,7 +69,7 @@ char* addExtToFilename(char* ext, char* fileName, int num);
 Bool isMacro(Macro *head, char* name);
 
 
-    /*Checks whther the given string is an operation or not*/
+    /*Checks whether the given string is an operation or not*/
 Bool isOP(char *str);
 
 

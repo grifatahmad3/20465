@@ -86,7 +86,7 @@ void printMacros(Macro *head){
 }
 
 Bool addERR(ERR **head, char* msg){
-    ERR *temp;
+    /*ERR *temp; // OLD CODE
     temp = *head;
     if(*head == NULL){
         *head = (ERR*)malloc(sizeof(ERR));
@@ -122,7 +122,30 @@ Bool addERR(ERR **head, char* msg){
         strcpy(temp->errmsg, msg);
         temp->next=NULL;
         return true;
+    }*/
+    ERR *temp = *head;
+    ERR *new_err = (ERR *)malloc(sizeof(ERR));
+    if (new_err == NULL) {
+        printf("\n!!ERR ALLOCATION ERR!!\n");
+        return false;
     }
+    new_err->errmsg = (char *)malloc(strlen(msg) + 1);
+    if (new_err->errmsg == NULL) {
+        free(new_err);
+        printf("\n!!ERR ALLOCATION ERR!!\n");
+        return false;
+    }
+    strcpy(new_err->errmsg, msg);
+    new_err->next = NULL;
+    if (temp==NULL) {
+        *head = new_err;
+    } else {
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = new_err;
+    }
+    return true;
 }
 
 void printERR(ERR **head){
