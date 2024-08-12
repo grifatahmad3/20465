@@ -38,7 +38,7 @@ Bool startPreAsm(char* filename, ERR **err) {
     }
 
     while (fgets(line, MAX_LINE, fpr) != NULL /*step 1*/) {
-
+        strcpy(str, "");
         sscanf(line, "%s", str);
         /*step 6:*/
         if(inMacro == true && strcmp(str, "endmacr")!=0) {
