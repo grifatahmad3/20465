@@ -86,6 +86,8 @@ Bool addERR(ERR **head, char* msg);
     /*print all errors*/
 void printERR(ERR **head);
 
+    /*frees all allocated errors*/
+void freeERR(ERR **head);
 /*End Functions*/
 
 #endif

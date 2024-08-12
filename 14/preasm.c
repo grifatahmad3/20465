@@ -38,6 +38,8 @@ Bool startPreAsm(char* filename){
 
     fclose(fpw);
     fclose(fpr);
+    free(filew);
+    free(filer);
     printf("\n\n");
 
 
@@ -48,6 +50,7 @@ Bool startPreAsm(char* filename){
     if(!addERR(&head, FILE_ERROR))
         return false;
     printERR(&head);
+    freeERR(&head);
 
     return true;
 }

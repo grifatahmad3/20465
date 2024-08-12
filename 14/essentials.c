@@ -133,4 +133,17 @@ void printERR(ERR **head){
         temp = temp->next;
     }
 }
+
+void freeERR(ERR **head){
+    ERR *curr, *next;
+    curr = *head;
+    if(curr == NULL)
+        return;
+    while(curr != NULL){
+        next = curr->next;
+        free(curr->errmsg);
+        free(curr);
+        curr = next;
+    }
+}
 /*End Functions*/
