@@ -39,44 +39,43 @@ Bool startPreAsm(char* filename, ERR **err) {
 
     while (fgets(line, MAX_LINE, fpr) != NULL /*step 1*/) {
 
-        if(sscanf(line, "%s", str)==1) {
-            /*step 6:*/
-            if(inMacro == true && strcmp(str, "endmacr")!=0) {
-                addMacroDefinition(findMacro(&macros, macroName), line);
-                continue;
-            }
+        sscanf(line, "%s", str);
+        /*step 6:*/
+        if(inMacro == true && strcmp(str, "endmacr")!=0) {
+            addMacroDefinition(findMacro(&macros, macroName), line);
+            continue;
+        }
 
-            /*step 7 and 8: */
-            if(!strcmp(str, "endmacr")) {
-                inMacro=false;
-                continue;
-            }
+        /*step 7 and 8: */
+        if(!strcmp(str, "endmacr")) {
+            inMacro=false;
+            continue;
+        }
 
-            /*step 2:*/
-            if(findMacro(&macros, str)!=NULL) {
-                fputs(findMacro(&macros, str)->definition, fpw);
-                continue;
-            }
+        /*step 2:*/
+        if(findMacro(&macros, str)!=NULL) {
+            fputs(findMacro(&macros, str)->definition, fpw);
+            continue;
+        }
 
-            /*step 3:*/
-            if(!strcmp(str, "macr")) {
-                /*step 4*/
-                inMacro = true;
-                /*step 5*/
-                if(sscanf(line, "%s %s", str, macroName)==2) {
-                    if(addMacro(&macros, macroName, "") == false) {
-                        addERR(err, MACRO_ADD_FAIL);
-                        break;
-                    }
-                }
-                else {
-                    addERR(err, WORD_FAILED);
+        /*step 3:*/
+        if(!strcmp(str, "macr")) {
+            /*step 4*/
+            inMacro = true;
+            /*step 5*/
+            if(sscanf(line, "%s %s", str, macroName)==2) {
+                if(addMacro(&macros, macroName, "") == false) {
+                    addERR(err, MACRO_ADD_FAIL);
                     break;
                 }
-                continue;
             }
-            fputs(line, fpw);
+            else {
+                addERR(err, WORD_FAILED);
+                break;
+            }
+            continue;
         }
+        fputs(line, fpw);
     }
 
     printMacros(&macros);
