@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-Bool startPreAsm(char* filename){
+Bool startPreAsm(char* filename) {
 
     /* 1- Read next line, if EOF jump to 9
        2- is first word a defined macro? if yes, replace the name with the definition, and go back to 1. else move on.
@@ -18,21 +18,26 @@ Bool startPreAsm(char* filename){
        9- eof
     */
 
-    ERR *head;
+    ERR *err;
+    Macro *macro;
     char *filer, *filew; /*filer = file to read, filew = file to write*/
     char str[MAX_LENGTH];
     FILE *fpr, *fpw; /*fpr = file pointer to read, fpw = file pointer to write*/
+    char macro1[] = "macro1";
+    char macro2[] = "macro2";
+    char macro3[] = "macro3";
 
-    head = NULL;
+    macro = NULL;
+    err = NULL;
     filer = addExtToFilename(EXT_ORIGIN, filename, strlen(EXT_ORIGIN));
     filew = addExtToFilename(EXT_PREASM, filename, strlen(EXT_PREASM));
     fpr = fopen(filer, "r");
     fpw = fopen(filew, "w");
 
-    if(fpr==NULL || fpw==NULL)
+    if (fpr == NULL || fpw == NULL)
         return false;
 
-    while (fgets(str, MAX_LENGTH, fpr) != NULL){
+    while (fgets(str, MAX_LENGTH, fpr) != NULL) {
         fputs(str, fpw);
     }
 
@@ -40,17 +45,34 @@ Bool startPreAsm(char* filename){
     fclose(fpr);
     free(filew);
     free(filer);
-    printf("\n\n");
 
+    if (!isMacro(&macro, macro1)){
+        if (!addMacro(&macro, macro1, "coooooool1"))
+            return false;
+    }
+    if (!isMacro(&macro, macro2)){
+        if (!addMacro(&macro, macro2, "cooooooolz2"))
+            return false;
+    }
+    if (!isMacro(&macro, macro3)){
+        if (!addMacro(&macro, macro3, "coooooool33331"))
+            return false;
+    }
+    if (!isMacro(&macro, macro3)){
+        if (!addMacro(&macro, macro3, "cooo"))
+            return false;
+    }
+    printMacros(&macro);
+    freeMacros(&macro);
 
-    if(!addERR(&head, "error message 01"))
+    if(!addERR(&err, "error1"))
         return false;
-    if(!addERR(&head, NAME_TOO_LONG))
+    if(!addERR(&err, "err2"))
         return false;
-    if(!addERR(&head, FILE_ERROR))
+    if(!addERR(&err, "3rd err"))
         return false;
-    printERR(&head);
-    freeERR(&head);
+    printERR(&err);
+    freeERR(&err);
 
     return true;
 }

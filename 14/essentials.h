@@ -20,7 +20,7 @@
 
 /* Definitions */
 #define MAX_LENGTH 100
-#define MAX_LINE 82 /* 80 + '\n' + '\0' */
+#define MAX_LINE 81 /* 80 + '\n' */
 #define OP_NUM 16
 #define EXT_ORIGIN ".as"
 #define EXT_PREASM ".am"
@@ -66,7 +66,7 @@ typedef struct _err{
 char* addExtToFilename(char* ext, char* fileName, int num);
 
     /*Checks whether the macro was defined before or not*/
-Bool isMacro(Macro *head, char* name);
+Bool isMacro(Macro **head, char* name);
 
 
     /*Checks whether the given string is an operation or not*/
@@ -74,11 +74,15 @@ Bool isOP(char *str);
 
 
     /*Makes and returns a new macro based on user input*/
-Macro* newMacro(char* name, char* definition, Macro *next);
+Bool addMacro(Macro **head, char* name, char* definition);
 
 
     /*prints the macros*/
-void printMacros(Macro* head);
+void printMacros(Macro **head);
+
+    /*frees all allocated macros*/
+void freeMacros(Macro **head);
+
 
     /*adds an error message to error node*/
 Bool addERR(ERR **head, char* msg);

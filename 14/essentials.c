@@ -47,88 +47,91 @@ Bool isOP(char *str){
     return true;
 }
 
-Bool isMacro(Macro *head, char* name){
-    Macro *temp; /*= (Macro *) malloc(sizeof(Macro));*/
-    temp = head;
+Bool isMacro(Macro **head, char* name){
+    Macro *temp;
+    temp = *head;
     while (temp != NULL)
     {
         if(!strcmp(temp->name, name)){
-            free(temp);
             return true;
         }
         temp = temp->next;
     }
-    free(temp);
     return false;
 }
 
-Macro* newMacro(char* name, char* definition, Macro *next){
-    Macro *new_macro = (Macro*) malloc(sizeof(Macro));
+Bool addMacro(Macro **head, char* name, char* definition) {
+    Macro *new_macro, *temp;
+    temp = *head;
+    new_macro = (Macro *) malloc(sizeof(Macro));
+    if (new_macro == NULL){
+        return false;
+    }
+
+    new_macro->name = (char*) malloc(sizeof(char)* strlen(name)+1);
+    if(new_macro->name == NULL){
+        free(new_macro);
+        return false;
+    }
     strcpy(new_macro->name, name);
-    /* TODO : fix copying the definition*/
+
+    new_macro->definition = (char*) malloc(sizeof(char)* strlen(definition)+1);
+    if(new_macro->definition == NULL){
+        free(new_macro->name);
+        free(new_macro);
+        return false;
+    }
     strcpy(new_macro->definition, definition);
-    new_macro->next=next;
-    return new_macro;
+    new_macro->next = NULL;
+
+    if (temp==NULL) {
+        *head = new_macro;
+    } else {
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = new_macro;
+    }
+
+    return true;
 }
 
-void printMacros(Macro *head){
+void printMacros(Macro **head){
     Macro *temp;
-    temp = head;
+    temp = *head;
     while(temp != NULL){
         printf("Macro:\n");
-        printf("%s", temp->name);
-        printf("\n");
-        printf("%s", temp->definition);
-        printf("\n\n");
-        temp = head->next;
+        printf("%s\n", temp->name);
+        printf("%s\n\n", temp->definition);
+        temp = temp->next;
     }
-    free(temp);
+}
+
+void freeMacros(Macro **head){
+    Macro *curr, *next;
+    curr = *head;
+    if(curr == NULL)
+        return;
+    while(curr != NULL){
+        next = curr->next;
+        free(curr->name);
+        free(curr->definition);
+        free(curr);
+        curr = next;
+    }
 }
 
 Bool addERR(ERR **head, char* msg){
-    /*ERR *temp; // OLD CODE
+    ERR *temp;
+    ERR *new_err;
+
     temp = *head;
-    if(*head == NULL){
-        *head = (ERR*)malloc(sizeof(ERR));
-        if(*head==NULL){
-            printf("\n!!ERR ALLOCATION ERR!!\n");
-            return false;
-        }
-        (*head)->errmsg = (char*) malloc(strlen(msg)+1);
-        if((*head)->errmsg==NULL){
-            printf("\n!!ERR ALLOCATION ERR!!\n");
-            return false;
-        }
-        strcpy((*head)->errmsg, msg);
-        (*head)->next=NULL;
-        return true;
-    }
-    else{
-        while(temp->next!=NULL){
-            printf("L3");
-            temp = temp->next;
-        }
-        temp->next = (ERR*)malloc(sizeof(ERR));
-        if(temp->next==NULL){
-            printf("\n!!ERR ALLOCATION ERR!!\n");
-            return false;
-        }
-        temp = temp->next;
-        temp->errmsg = (char*) malloc(strlen(msg)+1);
-        if(temp->errmsg==NULL){
-            printf("\n!!ERR ALLOCATION ERR!!\n");
-            return false;
-        }
-        strcpy(temp->errmsg, msg);
-        temp->next=NULL;
-        return true;
-    }*/
-    ERR *temp = *head;
-    ERR *new_err = (ERR *)malloc(sizeof(ERR));
+    new_err = (ERR *)malloc(sizeof(ERR));
     if (new_err == NULL) {
         printf("\n!!ERR ALLOCATION ERR!!\n");
         return false;
     }
+
     new_err->errmsg = (char *)malloc(strlen(msg) + 1);
     if (new_err->errmsg == NULL) {
         free(new_err);
@@ -136,7 +139,9 @@ Bool addERR(ERR **head, char* msg){
         return false;
     }
     strcpy(new_err->errmsg, msg);
+
     new_err->next = NULL;
+
     if (temp==NULL) {
         *head = new_err;
     } else {
