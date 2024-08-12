@@ -47,17 +47,17 @@ Bool isOP(char *str){
     return true;
 }
 
-Bool isMacro(Macro **head, char* name){
+Macro* findMacro(Macro **head, char* name){
     Macro *temp;
     temp = *head;
     while (temp != NULL)
     {
         if(!strcmp(temp->name, name)){
-            return true;
+            return temp;
         }
         temp = temp->next;
     }
-    return false;
+    return NULL;
 }
 
 Bool addMacro(Macro **head, char* name, char* definition) {
@@ -93,6 +93,22 @@ Bool addMacro(Macro **head, char* name, char* definition) {
         temp->next = new_macro;
     }
 
+    return true;
+}
+
+Bool addMacroDefinition(Macro *macro, char* newdef) {
+    char *temp;
+    if(macro == NULL || newdef == NULL) {
+        return false;
+    }
+    temp = (char*)malloc(sizeof(char)*(strlen(macro->definition)+(strlen(newdef)))+1);
+    if(temp == NULL) {
+        return false;
+    }
+    strcpy(temp, macro->definition);
+    strcat(temp, newdef);
+    free(macro->definition);
+    macro->definition = temp;
     return true;
 }
 

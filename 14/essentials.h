@@ -15,6 +15,8 @@
 /*Errors*/
 #define NAME_TOO_LONG "Overflow: The instruction name is too long!"
 #define FILE_ERROR "File Error! Can't open file!!"
+#define MACRO_ADD_FAIL "Failed creating a new macro!"
+#define WORD_FAILED "Failed reading word!"
 /*End Errors*/
 
 
@@ -66,7 +68,7 @@ typedef struct _err{
 char* addExtToFilename(char* ext, char* fileName, int num);
 
     /*Checks whether the macro was defined before or not*/
-Bool isMacro(Macro **head, char* name);
+Macro* findMacro(Macro **head, char* name);
 
 
     /*Checks whether the given string is an operation or not*/
@@ -76,6 +78,9 @@ Bool isOP(char *str);
     /*Makes and returns a new macro based on user input*/
 Bool addMacro(Macro **head, char* name, char* definition);
 
+
+    /*Adds definition to a given macro*/
+Bool addMacroDefinition(Macro *macro, char* newdef);
 
     /*prints the macros*/
 void printMacros(Macro **head);

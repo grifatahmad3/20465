@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-Bool startPreAsm(char* filename) {
+Bool startPreAsm(char* filename, ERR **err) {
 
     /* 1- Read next line, if EOF jump to 9
        2- is first word a defined macro? if yes, replace the name with the definition, and go back to 1. else move on.
@@ -18,61 +18,75 @@ Bool startPreAsm(char* filename) {
        9- eof
     */
 
-    ERR *err;
-    Macro *macro;
-    char *filer, *filew; /*filer = file to read, filew = file to write*/
-    char str[MAX_LENGTH];
-    FILE *fpr, *fpw; /*fpr = file pointer to read, fpw = file pointer to write*/
-    char macro1[] = "macro1";
-    char macro2[] = "macro2";
-    char macro3[] = "macro3";
 
-    macro = NULL;
-    err = NULL;
+    Macro *macros;
+    char *filer, *filew; /*filer = file to read, filew = file to write*/
+    char line[MAX_LINE+1], str[MAX_LINE+1], macroName[MAX_LINE+1];
+    FILE *fpr, *fpw; /*fpr = file pointer to read, fpw = file pointer to write*/
+    Bool inMacro;
+
+    macros = NULL;
+    inMacro = false;
     filer = addExtToFilename(EXT_ORIGIN, filename, strlen(EXT_ORIGIN));
     filew = addExtToFilename(EXT_PREASM, filename, strlen(EXT_PREASM));
     fpr = fopen(filer, "r");
     fpw = fopen(filew, "w");
 
-    if (fpr == NULL || fpw == NULL)
+    if (fpr == NULL || fpw == NULL) {
+        addERR(err, FILE_ERROR);
         return false;
-
-    while (fgets(str, MAX_LENGTH, fpr) != NULL) {
-        fputs(str, fpw);
     }
+
+    while (fgets(line, MAX_LINE, fpr) != NULL /*step 1*/) {
+
+        if(sscanf(line, "%s", str)==1) {
+            /*step 6:*/
+            if(inMacro == true && strcmp(str, "endmacr")!=0) {
+                addMacroDefinition(findMacro(&macros, macroName), line);
+                continue;
+            }
+
+            /*step 7 and 8: */
+            if(!strcmp(str, "endmacr")) {
+                inMacro=false;
+                continue;
+            }
+
+            /*step 2:*/
+            if(findMacro(&macros, str)!=NULL) {
+                fputs(findMacro(&macros, str)->definition, fpw);
+                continue;
+            }
+
+            /*step 3:*/
+            if(!strcmp(str, "macr")) {
+                /*step 4*/
+                inMacro = true;
+                /*step 5*/
+                if(sscanf(line, "%s %s", str, macroName)==2) {
+                    if(addMacro(&macros, macroName, "") == false) {
+                        addERR(err, MACRO_ADD_FAIL);
+                        break;
+                    }
+                }
+                else {
+                    addERR(err, WORD_FAILED);
+                    break;
+                }
+                continue;
+            }
+            fputs(line, fpw);
+        }
+    }
+
+    printMacros(&macros);
+    freeMacros(&macros);
 
     fclose(fpw);
     fclose(fpr);
     free(filew);
     free(filer);
 
-    if (!isMacro(&macro, macro1)){
-        if (!addMacro(&macro, macro1, "coooooool1"))
-            return false;
-    }
-    if (!isMacro(&macro, macro2)){
-        if (!addMacro(&macro, macro2, "cooooooolz2"))
-            return false;
-    }
-    if (!isMacro(&macro, macro3)){
-        if (!addMacro(&macro, macro3, "coooooool33331"))
-            return false;
-    }
-    if (!isMacro(&macro, macro3)){
-        if (!addMacro(&macro, macro3, "cooo"))
-            return false;
-    }
-    printMacros(&macro);
-    freeMacros(&macro);
-
-    if(!addERR(&err, "error1"))
-        return false;
-    if(!addERR(&err, "err2"))
-        return false;
-    if(!addERR(&err, "3rd err"))
-        return false;
-    printERR(&err);
-    freeERR(&err);
 
     return true;
 }

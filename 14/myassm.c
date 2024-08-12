@@ -5,17 +5,20 @@
 #include "preasm.h"
 
 int main(int argc, char *argv[]){
-   
+
+    ERR *err;
     int i = 1;
     char *file;
+
+    err = NULL;
 
     while(i < argc){
         printf(PREASSM_START);
         /*start preassm*/
         file = addExtToFilename(EXT_ORIGIN, argv[i], strlen(EXT_ORIGIN));
         printf("\n%s\n\n", file);
-        if(startPreAsm(argv[i]) == false){
-            printf(FILE_ERROR);
+        if(startPreAsm(argv[i], &err) == false){
+            printERR(&err);
             return -1;
             }
         printf(PREASSM_END);
@@ -23,5 +26,7 @@ int main(int argc, char *argv[]){
     }
     if (file!=NULL) 
         free(file);
+    if(err!=NULL)
+        freeERR(&err);
     return 0;
 }
