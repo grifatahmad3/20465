@@ -41,13 +41,13 @@ Bool startPreAsm(char* filename){
     printf("\n\n");
 
 
-    if(!addERR(head, "error message 01"))
+    if(!addERR(&head, "error message 01"))
         return false;
-    if(!addERR(head, NAME_TOO_LONG))
+    if(!addERR(&head, NAME_TOO_LONG))
         return false;
-    if(!addERR(head, FILE_ERROR))
+    if(!addERR(&head, FILE_ERROR))
         return false;
-    printERR(head);
+    printERR(&head);
 
     return true;
 }

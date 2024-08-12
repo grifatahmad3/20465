@@ -85,24 +85,22 @@ void printMacros(Macro *head){
     free(temp);
 }
 
-Bool addERR(ERR *head, char* msg){
+Bool addERR(ERR **head, char* msg){
     ERR *temp;
-    temp = head;
-    if(head == NULL){
-        printf("L1");
-        head = (ERR*)malloc(sizeof(ERR));
-        if(head==NULL){
+    temp = *head;
+    if(*head == NULL){
+        *head = (ERR*)malloc(sizeof(ERR));
+        if(*head==NULL){
             printf("\n!!ERR ALLOCATION ERR!!\n");
             return false;
         }
-        head->errmsg = (char*) malloc(strlen(msg));
-        if(head->errmsg==NULL){
+        (*head)->errmsg = (char*) malloc(strlen(msg)+1);
+        if((*head)->errmsg==NULL){
             printf("\n!!ERR ALLOCATION ERR!!\n");
             return false;
         }
-        strcpy(head->errmsg, msg);
-        head->next=NULL;
-        printf("L2");
+        strcpy((*head)->errmsg, msg);
+        (*head)->next=NULL;
         return true;
     }
     else{
@@ -110,28 +108,26 @@ Bool addERR(ERR *head, char* msg){
             printf("L3");
             temp = temp->next;
         }
-        printf("L4");
         temp->next = (ERR*)malloc(sizeof(ERR));
-        if(temp==NULL){
+        if(temp->next==NULL){
             printf("\n!!ERR ALLOCATION ERR!!\n");
             return false;
         }
         temp = temp->next;
-        temp->errmsg = (char*) malloc(strlen(msg));
+        temp->errmsg = (char*) malloc(strlen(msg)+1);
         if(temp->errmsg==NULL){
             printf("\n!!ERR ALLOCATION ERR!!\n");
             return false;
         }
         strcpy(temp->errmsg, msg);
         temp->next=NULL;
-        printf("L5");
         return true;
     }
 }
 
-void printERR(ERR *head){
+void printERR(ERR **head){
     ERR *temp;
-    temp = head;
+    temp = *head;
     while(temp != NULL){
         printf("\n%s\n", temp->errmsg);
         temp = temp->next;

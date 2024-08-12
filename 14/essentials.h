@@ -81,10 +81,10 @@ Macro* newMacro(char* name, char* definition, Macro *next);
 void printMacros(Macro* head);
 
     /*adds an error message to error node*/
-Bool addERR(ERR *head, char* msg);
+Bool addERR(ERR **head, char* msg);
 
     /*print all errors*/
-void printERR(ERR *head);
+void printERR(ERR **head);
 
 /*End Functions*/
 
