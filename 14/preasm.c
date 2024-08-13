@@ -38,7 +38,9 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
     while (fgets(line, MAX_LINE, fpr) != NULL /*step 1*/) {
 
         strcpy(str, "");
-        sscanf(line, "%s", str);
+        if(sscanf(line, "%s", str) < 1){
+            continue;
+        }
         /*step 6:*/
         if(inMacro == true && strcmp(str, "endmacr")!=0) {
             addMacroDefinition(findMacro(macros, macroName), line);
