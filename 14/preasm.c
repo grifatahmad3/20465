@@ -26,7 +26,16 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
 
     inMacro = false;
     filer = addExtToFilename(EXT_ORIGIN, filename, strlen(EXT_ORIGIN));
+    if (filer == NULL) {
+        addERR(err, MALLOC_ERROR);
+        return false;
+    }
     filew = addExtToFilename(EXT_PREASM, filename, strlen(EXT_PREASM));
+    if (filew == NULL) {
+        addERR(err, MALLOC_ERROR);
+        free(filer);
+        return false;
+    }
     fpr = fopen(filer, "r");
     fpw = fopen(filew, "w");
 

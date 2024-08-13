@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
     ERR *err;
     Macro *macros;
     int i = 1;
-    char *file = NULL;
+    /*char *filename = NULL;*/
 
     err = NULL;
     macros = NULL;
@@ -17,24 +17,15 @@ int main(int argc, char *argv[]){
 
     while(i < argc){
 
-        /*start preassm*/
-        file = addExtToFilename(EXT_ORIGIN, argv[i], strlen(EXT_ORIGIN));
-        if(file == NULL){
-            printf(MALLOC_ERROR);
-            i++;
-            continue;
-        }
-        printf("\nFile: %s\n\n", file);
+        printf("\nFile: %s.as\n\n", argv[i]);
         printf(PREASSM_START);
         if(startPreAsm(argv[i], &macros, &err) == false){
             printERR(&err);
-            free(file);
             i++;
             continue;
             }
         if(err!=NULL){
             printERR(&err);
-            free(file);
             i++;
             continue;
         }
@@ -54,7 +45,6 @@ int main(int argc, char *argv[]){
         /*end second pass*/
 
         printf("\n\n");
-        free(file);
         i++;
     }
 
