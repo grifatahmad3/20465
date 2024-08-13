@@ -49,12 +49,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/poseidon/20465/14/cmake-build-debug",
-		"source" : "/home/poseidon/20465/14"
+		"build" : "/home/user/projects/20465/14/cmake-build-debug",
+		"source" : "/home/user/projects/20465/14"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 6
+		"minor" : 7
 	}
 }

@@ -4,8 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
-Bool startPreAsm(char* filename, ERR **err) {
+Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
 
     /* 1- Read next line, if EOF jump to 9
        2- is first word a defined macro? if yes, replace the name with the definition, and go back to 1. else move on.
@@ -18,14 +19,11 @@ Bool startPreAsm(char* filename, ERR **err) {
        9- eof
     */
 
-
-    Macro *macros;
     char *filer, *filew; /*filer = file to read, filew = file to write*/
     char line[MAX_LINE+1], str[MAX_LINE+1], macroName[MAX_LINE+1];
     FILE *fpr, *fpw; /*fpr = file pointer to read, fpw = file pointer to write*/
     Bool inMacro;
 
-    macros = NULL;
     inMacro = false;
     filer = addExtToFilename(EXT_ORIGIN, filename, strlen(EXT_ORIGIN));
     filew = addExtToFilename(EXT_PREASM, filename, strlen(EXT_PREASM));
@@ -38,11 +36,12 @@ Bool startPreAsm(char* filename, ERR **err) {
     }
 
     while (fgets(line, MAX_LINE, fpr) != NULL /*step 1*/) {
+
         strcpy(str, "");
         sscanf(line, "%s", str);
         /*step 6:*/
         if(inMacro == true && strcmp(str, "endmacr")!=0) {
-            addMacroDefinition(findMacro(&macros, macroName), line);
+            addMacroDefinition(findMacro(macros, macroName), line);
             continue;
         }
 
@@ -53,8 +52,8 @@ Bool startPreAsm(char* filename, ERR **err) {
         }
 
         /*step 2:*/
-        if(findMacro(&macros, str)!=NULL) {
-            fputs(findMacro(&macros, str)->definition, fpw);
+        if(findMacro(macros, str)!=NULL) {
+            fputs(findMacro(macros, str)->definition, fpw);
             continue;
         }
 
@@ -64,7 +63,7 @@ Bool startPreAsm(char* filename, ERR **err) {
             inMacro = true;
             /*step 5*/
             if(sscanf(line, "%s %s", str, macroName)==2) {
-                if(addMacro(&macros, macroName, "") == false) {
+                if(addMacro(macros, macroName, "") == false) {
                     addERR(err, MACRO_ADD_FAIL);
                     break;
                 }
@@ -77,9 +76,6 @@ Bool startPreAsm(char* filename, ERR **err) {
         }
         fputs(line, fpw);
     }
-
-    printMacros(&macros);
-    freeMacros(&macros);
 
     fclose(fpw);
     fclose(fpr);

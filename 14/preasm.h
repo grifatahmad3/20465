@@ -4,6 +4,6 @@
 
 #include "essentials.h"
 
-Bool startPreAsm(char* filename, ERR **err);
+Bool startPreAsm(char* filename, Macro **macros, ERR **err);
 
 #endif
