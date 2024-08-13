@@ -9,23 +9,25 @@ int main(int argc, char *argv[]){
     ERR *err;
     Macro *macros;
     int i = 1;
-    /*char *filename = NULL;*/
 
-    err = NULL;
+
     macros = NULL;
 
 
     while(i < argc){
+        err = NULL; /*new err list for each file*/
 
         printf("\nFile: %s.as\n\n", argv[i]);
         printf(PREASSM_START);
         if(startPreAsm(argv[i], &macros, &err) == false){
             printERR(&err);
+            freeERR(&err);
             i++;
             continue;
             }
-        if(err!=NULL){
+        if(err!=NULL){ /*should be removed soon because it's unnecessary*/
             printERR(&err);
+            freeERR(&err);
             i++;
             continue;
         }
@@ -46,13 +48,14 @@ int main(int argc, char *argv[]){
 
         printf("\n\n");
         i++;
+        if(err!=NULL)
+            freeERR(&err);
     }
 
     /* before exiting*/
     if(macros != NULL){
         freeMacros(&macros);
     }
-    if(err!=NULL)
-        freeERR(&err);
+
     return 0;
 }

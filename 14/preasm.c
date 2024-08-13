@@ -36,11 +36,21 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
         free(filer);
         return false;
     }
-    fpr = fopen(filer, "r");
-    fpw = fopen(filew, "w");
 
-    if (fpr == NULL || fpw == NULL) {
+    fpr = fopen(filer, "r");
+    if (fpr == NULL) {
         addERR(err, FILE_ERROR);
+        free(filer);
+        free(filew);
+        return false;
+    }
+
+    fpw = fopen(filew, "w");
+    if (fpw == NULL) {
+        addERR(err, FILE_ERROR);
+        free(filer);
+        free(filew);
+        fclose(fpr);
         return false;
     }
 

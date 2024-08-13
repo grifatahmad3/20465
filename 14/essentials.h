@@ -19,7 +19,7 @@
 /*Errors*/
 #define MALLOC_ERROR "Failed memory allocation!\n"
 #define NAME_TOO_LONG "Overflow: The instruction name is too long!\n"
-#define FILE_ERROR "File Error! Can't open file!!\n"
+#define FILE_ERROR "File Error! Can't open or create file!!\n"
 #define MACRO_ADD_FAIL "Failed creating a new macro!\n"
 #define WORD_FAILED "Failed reading word!\n"
 /*End Errors*/
