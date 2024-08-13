@@ -8,29 +8,55 @@ int main(int argc, char *argv[]){
 
     ERR *err;
     Macro *macros;
-    int i = 1;
+    int i = 0;
     char *file = NULL;
 
     err = NULL;
     macros = NULL;
 
+
     while(i < argc){
-        printf(PREASSM_START);
+        i++;
+
         /*start preassm*/
         file = addExtToFilename(EXT_ORIGIN, argv[i], strlen(EXT_ORIGIN));
-        printf("\n%s\n\n", file);
+        if(file == NULL){
+            printf(MALLOC_ERROR);
+            continue;
+        }
+        printf("\nFile: %s\n\n", file);
+        printf(PREASSM_START);
         if(startPreAsm(argv[i], &macros, &err) == false){
             printERR(&err);
-            return -1;
+            free(file);
+            continue;
             }
-        if(macros!=NULL){
-            printMacros(&macros);
+        if(err!=NULL){
+            printERR(&err);
+            free(file);
+            continue;
         }
         printf(PREASSM_END);
-        i++;
+        /*end preassm*/
+
+
+        /*start first pass*/
+        printf(FIRSTPASS_START);
+        printf(FIRSTPASS_END);
+        /*end first pass*/
+
+
+        /*start second pass*/
+        printf(SECONDPASS_START);
+        printf(SECONDPASS_END);
+        /*end second pass*/
+
+        printf("\n\n");
         if (file!=NULL)
             free(file);
     }
+
+    /* before exiting*/
     if(macros != NULL){
         freeMacros(&macros);
     }

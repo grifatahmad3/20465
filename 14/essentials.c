@@ -32,7 +32,11 @@ OP operations[OP_NUM] = {
 /*Functions*/
 
 char* addExtToFilename(char* ext, char* fileName, int num){
-    char *temp = (char*) malloc(sizeof(char) * MAX_LENGTH);
+    char *temp;
+    temp = (char*) malloc(sizeof(char) * MAX_LINE + 1);
+    if(temp == NULL){
+        return NULL;
+    }
     strcpy(temp, fileName);
     strncat(temp, ext, num);
     return temp;

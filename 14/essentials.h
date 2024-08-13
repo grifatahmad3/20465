@@ -10,13 +10,18 @@
 /* Messages */
 #define PREASSM_START "Starting Pre-Assembler...\n"
 #define PREASSM_END "Pre-Assembler finished successfully!\n"
+#define FIRSTPASS_START "Starting stage I of the assembler...\n"
+#define FIRSTPASS_END "Assembler stage I finished successfully!\n"
+#define SECONDPASS_START "Starting stage II of the assembler...\n"
+#define SECONDPASS_END "Assembler stage II finished successfully!\n"
 /*End Messages*/
 
 /*Errors*/
-#define NAME_TOO_LONG "Overflow: The instruction name is too long!"
-#define FILE_ERROR "File Error! Can't open file!!"
-#define MACRO_ADD_FAIL "Failed creating a new macro!"
-#define WORD_FAILED "Failed reading word!"
+#define MALLOC_ERROR "Failed memory allocation!\n"
+#define NAME_TOO_LONG "Overflow: The instruction name is too long!\n"
+#define FILE_ERROR "File Error! Can't open file!!\n"
+#define MACRO_ADD_FAIL "Failed creating a new macro!\n"
+#define WORD_FAILED "Failed reading word!\n"
 /*End Errors*/
 
 
