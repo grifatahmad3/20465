@@ -56,6 +56,8 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
 
     while (fgets(line, MAX_LINE, fpr) != NULL /*step 1*/) {
 
+        /*Need to check if the macro name is a lgeal name; meaning it's not a word used the language like r0..r7 or an operation name */
+
         strcpy(str, "");
         if(sscanf(line, "%s", str) < 1){
             continue;
