@@ -8,9 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/user/projects/20465/14/essentials.c" "CMakeFiles/myassm.dir/essentials.c.o" "gcc" "CMakeFiles/myassm.dir/essentials.c.o.d"
-  "/home/user/projects/20465/14/myassm.c" "CMakeFiles/myassm.dir/myassm.c.o" "gcc" "CMakeFiles/myassm.dir/myassm.c.o.d"
-  "/home/user/projects/20465/14/preasm.c" "CMakeFiles/myassm.dir/preasm.c.o" "gcc" "CMakeFiles/myassm.dir/preasm.c.o.d"
+  "/home/poseidon/20465/14/essentials.c" "CMakeFiles/myassm.dir/essentials.c.o" "gcc" "CMakeFiles/myassm.dir/essentials.c.o.d"
+  "/home/poseidon/20465/14/myassm.c" "CMakeFiles/myassm.dir/myassm.c.o" "gcc" "CMakeFiles/myassm.dir/myassm.c.o.d"
+  "/home/poseidon/20465/14/preasm.c" "CMakeFiles/myassm.dir/preasm.c.o" "gcc" "CMakeFiles/myassm.dir/preasm.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
