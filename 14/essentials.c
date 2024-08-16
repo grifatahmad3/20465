@@ -26,6 +26,10 @@ OP operations[OP_NUM] = {
     {"stop", 15}
 };
 
+char *registers[REG_NUM] {
+    "r0", "r1", "r2", "r3",
+    "r4", "r5", "r6", "r7"
+};
 
 /*End Objects*/
 
@@ -42,13 +46,24 @@ char* addExtToFilename(char* ext, char* fileName, int num){
     return temp;
 }
 
-Bool isOP(char *str){
+int findOP(const char *str){
     int i;
-    for(i = 0; i<OP_NUM; i++){
-        if(strcmp(str, operations[i].name) != 0)
-            return false;
+    for(i = 0; i<OP_NUM; i++) {
+        if(strcmp(str, operations[i].name) == 0){
+            return i;
+        }
     }
-    return true;
+    return -1;
+}
+
+int findReg(const char *str) {
+    int i;
+    for(i=0; i<REG_NUM; i++) {
+        if(strcmp(str, registers[i])==0) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 Macro* findMacro(Macro **head, char* name){

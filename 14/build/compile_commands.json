@@ -1,0 +1,20 @@
+[
+{
+  "directory": "/home/poseidon/20465/14/build",
+  "command": "/usr/bin/cc   -g -std=gnu90 -o CMakeFiles/myassm.dir/myassm.c.o -c /home/poseidon/20465/14/myassm.c",
+  "file": "/home/poseidon/20465/14/myassm.c",
+  "output": "CMakeFiles/myassm.dir/myassm.c.o"
+},
+{
+  "directory": "/home/poseidon/20465/14/build",
+  "command": "/usr/bin/cc   -g -std=gnu90 -o CMakeFiles/myassm.dir/essentials.c.o -c /home/poseidon/20465/14/essentials.c",
+  "file": "/home/poseidon/20465/14/essentials.c",
+  "output": "CMakeFiles/myassm.dir/essentials.c.o"
+},
+{
+  "directory": "/home/poseidon/20465/14/build",
+  "command": "/usr/bin/cc   -g -std=gnu90 -o CMakeFiles/myassm.dir/preasm.c.o -c /home/poseidon/20465/14/preasm.c",
+  "file": "/home/poseidon/20465/14/preasm.c",
+  "output": "CMakeFiles/myassm.dir/preasm.c.o"
+}
+]

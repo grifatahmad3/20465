@@ -29,6 +29,11 @@
 #define MAX_LENGTH 100
 #define MAX_LINE 81 /* 80 + '\n' */
 #define OP_NUM 16
+#define RAM_SIZE 4096
+#define WORD_SIZE 15
+#define MAX_NUMBER 2047 /* 12 bits in 2's complement, as we only have 12 bits for storing numbers*/
+#define MIN_NUMBER -2048 /* same as above*/
+#define REG_NUM 8
 #define EXT_ORIGIN ".as"
 #define EXT_PREASM ".am"
 #define EXT_OBJECT ".ob"
@@ -75,14 +80,14 @@ char* addExtToFilename(char* ext, char* fileName, int num);
     /*Checks whether the macro was defined before or not*/
 Macro* findMacro(Macro **head, char* name);
 
-
     /*Checks whether the given string is an operation or not*/
-Bool isOP(char *str);
+int findOP(const char *str);
 
+    /*Check whether the given string is a register or not*/
+int findReg(const char *str);
 
     /*Makes and returns a new macro based on user input*/
 Bool addMacro(Macro **head, char* name, char* definition);
-
 
     /*Adds definition to a given macro*/
 Bool addMacroDefinition(Macro *macro, char* newdef);
@@ -93,7 +98,6 @@ void printMacros(Macro **head);
     /*frees all allocated macros*/
 void freeMacros(Macro **head);
 
-
     /*adds an error message to error node*/
 Bool addERR(ERR **head, char* msg);
 
@@ -102,6 +106,7 @@ void printERR(ERR **head);
 
     /*frees all allocated errors*/
 void freeERR(ERR **head);
+
 /*End Functions*/
 
 #endif
