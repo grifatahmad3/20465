@@ -26,7 +26,7 @@ OP operations[OP_NUM] = {
     {"stop", 15}
 };
 
-char *registers[REG_NUM] {
+char *registers[REG_NUM] = {
     "r0", "r1", "r2", "r3",
     "r4", "r5", "r6", "r7"
 };
