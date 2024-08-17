@@ -34,6 +34,15 @@ char *registers[REG_NUM] = {
 /*End Objects*/
 
 /*Functions*/
+void printInBinary(unsigned int num){
+    int i;
+    unsigned mask = 1<<(WORD_SIZE-1);
+    for(i=0; i<WORD_SIZE; i++){
+        if(num&mask) printf("1");
+        else printf("0");
+        mask/=2;
+    }
+}
 
 char* addExtToFilename(char* ext, char* fileName, int num){
     char *temp;

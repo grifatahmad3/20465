@@ -34,6 +34,19 @@
 #define MAX_NUMBER 2047 /* 12 bits in 2's complement, as we only have 12 bits for storing numbers*/
 #define MIN_NUMBER -2048 /* same as above*/
 #define REG_NUM 8
+#define IMM_ACCESS 1 /* immediate access: 0001 */
+#define DIR_ACCESS 2 /* direct access: 0010 */
+#define IND_REG_ACCESS 4 /* indirect register access: 0100 */
+#define DIR_REG_ACCESS 8 /* direct register access: 1000 */
+#define A_FIELD 4 /* 100 */
+#define R_FIELD 2 /* 010 */
+#define E_FIELD 1 /* 001 */
+#define BITS11_14(x) (x<<11) /* sets the bits 11-14 in the binary */
+#define BITS7_10(x) (x<<7) /* as above */
+#define BITS3_6(x) (x<<3) /* as above */
+#define BITS3_14(x) (x<<3) /* as above */
+#define BITS6_8(x) (x<<6) /* as above */
+#define BITS3_5(x) (x<<3) /* as above */
 #define EXT_ORIGIN ".as"
 #define EXT_PREASM ".am"
 #define EXT_OBJECT ".ob"
@@ -73,6 +86,8 @@ typedef struct _err{
 /*End Structs*/
 
 /*Functions*/
+    /* Printing number in binary */
+void printInBinary(unsigned int num);
 
     /*Adds the needed file extension to the file name*/
 char* addExtToFilename(char* ext, char* fileName, int num);
