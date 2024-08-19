@@ -3,6 +3,8 @@
 #include <string.h>
 #include "essentials.h"
 #include "preasm.h"
+#include "firstpass.h"
+
 
 int main(int argc, char *argv[]){
 
@@ -20,23 +22,27 @@ int main(int argc, char *argv[]){
         printf("\nFile: %s.as\n\n", argv[i]);
         printf(PREASSM_START);
         if(startPreAsm(argv[i], &macros, &err) == false){
-            printERR(&err);
-            freeERR(&err);
+            if(err!=NULL){
+                printERR(&err);
+                freeERR(&err);
+            }
             i++;
             continue;
             }
-        if(err!=NULL){ /*should be removed soon because it's unnecessary*/
-            printERR(&err);
-            freeERR(&err);
-            i++;
-            continue;
-        }
         printf(PREASSM_END);
         /*end preassm*/
 
 
         /*start first pass*/
         printf(FIRSTPASS_START);
+        if(startFirstPass(argv[i], &macros, &err) == false){
+            if(err!=NULL){
+                printERR(&err);
+                freeERR(&err);
+            }
+            i++;
+            continue;
+        }
         printf(FIRSTPASS_END);
         /*end first pass*/
 

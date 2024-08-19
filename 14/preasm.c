@@ -1,3 +1,4 @@
+/* Implementaions of preasm.h */
 
 #include "preasm.h"
 #include "essentials.h"
