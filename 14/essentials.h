@@ -22,6 +22,7 @@
 #define FILE_ERROR "File Error! Can't open or create file!!\n"
 #define MACRO_ADD_FAIL "Failed creating a new macro!\n"
 #define WORD_FAILED "Failed reading word!\n"
+#define ILLEGAL_MACRO_NAME "Illegal macro name!\n"
 /*End Errors*/
 
 

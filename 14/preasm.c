@@ -86,8 +86,14 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
             inMacro = true;
             /*step 5*/
             if(sscanf(line, "%s %s", str, macroName)==2) {
-                if(addMacro(macros, macroName, "") == false) {
-                    addERR(err, MACRO_ADD_FAIL);
+                if(findMacro(macros,macroName)==NULL && findOP(macroName)==-1 && findReg(macroName)==-1){
+                    if(addMacro(macros, macroName, "") == false) {
+                        addERR(err, MACRO_ADD_FAIL);
+                        break;
+                    }
+                }
+                else{
+                    addERR(err, ILLEGAL_MACRO_NAME);
                     break;
                 }
             }

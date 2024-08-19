@@ -1,6 +1,6 @@
  MAIN: add r3,LIST
  LOOP: prn #48
- macr m_macr
+ macr r2
  cmp r3,#-6
  bne END
  endmacr
