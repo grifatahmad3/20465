@@ -35,6 +35,7 @@
 #define MAX_NUMBER 2047 /* 12 bits in 2's complement, as we only have 12 bits for storing numbers*/
 #define MIN_NUMBER -2048 /* same as above*/
 #define REG_NUM 8
+#define MAX_OP_LINES 3 /* Maximum number of lines each operation could generate in binary*/
 #define IMM_ACCESS 1 /* immediate access: 0001 */
 #define DIR_ACCESS 2 /* direct access: 0010 */
 #define IND_REG_ACCESS 4 /* indirect register access: 0100 */
@@ -65,6 +66,7 @@ typedef struct _macro {
 
 typedef struct _symbol{
     char *name;
+    int address;
 } Symbol;
 
 

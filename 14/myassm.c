@@ -10,11 +10,13 @@ int main(int argc, char *argv[]){
 
     ERR *err;
     Macro *macros;
+    Symbol *symbols;
     int i = 1;
+    int IC=100, DC=100;
 
 
     macros = NULL;
-
+    symbols = NULL;
 
     while(i < argc){
         err = NULL; /*new err list for each file*/
@@ -35,7 +37,7 @@ int main(int argc, char *argv[]){
 
         /*start first pass*/
         printf(FIRSTPASS_START);
-        if(startFirstPass(argv[i], &macros, &err) == false){
+        if(startFirstPass(argv[i], &macros, &err, &symbols, &IC, &DC) == false){
             if(err!=NULL){
                 printERR(&err);
                 freeERR(&err);

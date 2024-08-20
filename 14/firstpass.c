@@ -5,6 +5,8 @@
 #include "essentials.h"
 
 
-Bool startFirstPass(char* filename, Macro **macros, ERR **err){
+Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols, int *IC, int *DC){
+
+    
     return true;
 }
