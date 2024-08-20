@@ -8,22 +8,22 @@
 /*Objects*/
 
 OP operations[OP_NUM] = {
-    {"mov", 0},
-    {"cmp", 1},
-    {"add", 2},
-    {"sub", 3},
-    {"lea", 4},
-    {"clr", 5},
-    {"not", 6},
-    {"inc", 7},
-    {"dec", 8},
-    {"jmp", 9},
-    {"bne", 10},
-    {"red", 11},
-    {"prn", 12},
-    {"jsr", 13},
-    {"rts", 14},
-    {"stop", 15}
+    {"mov", 0, 2},
+    {"cmp", 1, 2},
+    {"add", 2, 2},
+    {"sub", 3, 2},
+    {"lea", 4, 2},
+    {"clr", 5, 1},
+    {"not", 6, 1},
+    {"inc", 7, 1},
+    {"dec", 8, 1},
+    {"jmp", 9, 1},
+    {"bne", 10, 1},
+    {"red", 11, 1},
+    {"prn", 12, 1},
+    {"jsr", 13, 1},
+    {"rts", 14, 0},
+    {"stop", 15, 0}
 };
 
 char *registers[REG_NUM] = {
@@ -165,7 +165,7 @@ void freeMacros(Macro **head){
     }
 }
 
-Bool addERR(ERR **head, char* msg){
+Bool addERR(ERR **head, char* msg, int line_num){
     ERR *temp;
     ERR *new_err;
 
@@ -183,6 +183,7 @@ Bool addERR(ERR **head, char* msg){
         return false;
     }
     strcpy(new_err->errmsg, msg);
+    new_err->line_num = line_num;
 
     new_err->next = NULL;
 
@@ -201,7 +202,11 @@ void printERR(ERR **head){
     ERR *temp;
     temp = *head;
     while(temp != NULL){
-        printf("\n%s\n", temp->errmsg);
+        printf("\n");
+        if(temp->line_num!=0){
+            printf("At line %d: ", temp->line_num);
+        }
+        printf("%s\n",temp->errmsg);
         temp = temp->next;
     }
 }

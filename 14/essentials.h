@@ -77,12 +77,14 @@ typedef enum _bool {
 typedef struct _op {
     char* name;
     int opcode;
+    int opr_num;
 } OP;
 
 
 typedef struct _err{
     char *errmsg;
     struct _err* next;
+    int line_num;
 } ERR;
 /*End Structs*/
 
@@ -115,7 +117,7 @@ void printMacros(Macro **head);
 void freeMacros(Macro **head);
 
     /*adds an error message to error node*/
-Bool addERR(ERR **head, char* msg);
+Bool addERR(ERR **head, char* msg, int line_num);
 
     /*print all errors*/
 void printERR(ERR **head);

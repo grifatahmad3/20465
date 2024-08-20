@@ -19,28 +19,29 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
        8- turn off "there is macro" flag, jump back to 1 (finished saving macr).
        9- eof
     */
-
+    
     char *filer, *filew; /*filer = file to read, filew = file to write*/
     char line[MAX_LINE+1], str[MAX_LINE+1], macroName[MAX_LINE+1];
     FILE *fpr, *fpw; /*fpr = file pointer to read, fpw = file pointer to write*/
     Bool inMacro;
+    int line_num = 0;
 
     inMacro = false;
     filer = addExtToFilename(EXT_ORIGIN, filename, strlen(EXT_ORIGIN));
     if (filer == NULL) {
-        addERR(err, MALLOC_ERROR);
+        addERR(err, MALLOC_ERROR, 0);
         return false;
     }
     filew = addExtToFilename(EXT_PREASM, filename, strlen(EXT_PREASM));
     if (filew == NULL) {
-        addERR(err, MALLOC_ERROR);
+        addERR(err, MALLOC_ERROR, 0);
         free(filer);
         return false;
     }
 
     fpr = fopen(filer, "r");
     if (fpr == NULL) {
-        addERR(err, FILE_ERROR);
+        addERR(err, FILE_ERROR, 0);
         free(filer);
         free(filew);
         return false;
@@ -48,7 +49,7 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
 
     fpw = fopen(filew, "w");
     if (fpw == NULL) {
-        addERR(err, FILE_ERROR);
+        addERR(err, FILE_ERROR, 0);
         free(filer);
         free(filew);
         fclose(fpr);
@@ -57,7 +58,7 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
 
     while (fgets(line, MAX_LINE, fpr) != NULL /*step 1*/) {
 
-        /*Need to check if the macro name is a lgeal name; meaning it's not a word used the language like r0..r7 or an operation name */
+        line_num++;
 
         strcpy(str, "");
         if(sscanf(line, "%s", str) < 1){
@@ -89,17 +90,17 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
             if(sscanf(line, "%s %s", str, macroName)==2) {
                 if(findMacro(macros,macroName)==NULL && findOP(macroName)==-1 && findReg(macroName)==-1){
                     if(addMacro(macros, macroName, "") == false) {
-                        addERR(err, MACRO_ADD_FAIL);
+                        addERR(err, MACRO_ADD_FAIL, line_num);
                         break;
                     }
                 }
                 else{
-                    addERR(err, ILLEGAL_MACRO_NAME);
+                    addERR(err, ILLEGAL_MACRO_NAME, line_num);
                     break;
                 }
             }
             else {
-                addERR(err, WORD_FAILED);
+                addERR(err, WORD_FAILED, line_num);
                 break;
             }
             continue;
@@ -112,6 +113,8 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
     free(filew);
     free(filer);
 
-
+    if(*err!=NULL){
+        return false;
+    }
     return true;
 }
