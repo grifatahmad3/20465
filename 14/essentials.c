@@ -223,4 +223,54 @@ void freeERR(ERR **head){
         curr = next;
     }
 }
+
+Symbol* findSymbol(Symbol **head, char *name){
+    Symbol *temp;
+    temp = *head;
+    while (temp != NULL)
+    {
+        if(!strcmp(temp->name, name)){
+            return temp;
+        }
+        temp = temp->next;
+    }
+    return NULL;
+}
+
+Bool addSymbol(Symbol **head, char *name, int address){
+    Symbol *new_symbol, *temp;
+    temp = *head;
+
+    new_symbol = (Symbol*)malloc(sizeof(Symbol));
+    if(new_symbol==NULL){
+        return false;
+    }
+
+    new_symbol->name = (char*)malloc(sizeof(char)*strlen(name) + 1);
+    if(new_symbol->name == NULL){
+        free(new_symbol);
+        return false;
+    }
+
+    new_symbol->address = address;
+
+    if(temp == NULL){
+        *head = new_symbol;
+    }
+    else{
+        while(temp->next != NULL){
+            temp = temp->next;
+        }
+        temp->next = new_symbol;
+    }
+    return true;
+}
+
+Bool addSymbolAddress(Symbol *smbl, int address){
+    if(smbl == NULL){
+        return false;
+    }
+    smbl->address = address;
+    return true;
+}
 /*End Functions*/

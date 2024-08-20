@@ -67,6 +67,7 @@ typedef struct _macro {
 typedef struct _symbol{
     char *name;
     int address;
+    struct _symbol* next;
 } Symbol;
 
 
@@ -109,7 +110,7 @@ int findReg(const char *str);
     /*Makes and returns a new macro based on user input*/
 Bool addMacro(Macro **head, char* name, char* definition);
 
-    /*Adds definition to a given macro*/
+    /*Adds definition to a given macro, assumes macro already exists*/
 Bool addMacroDefinition(Macro *macro, char* newdef);
 
     /*prints the macros*/
@@ -126,6 +127,15 @@ void printERR(ERR **head);
 
     /*frees all allocated errors*/
 void freeERR(ERR **head);
+
+    /*finds if a symbol already exists and returns its address, NULL if it doesn't exist*/
+Symbol* findSymbol(Symbol **head, char *name);
+
+    /*creates a new symbol, assumes symbol with the same name doesn't exist*/
+Bool addSymbol(Symbol **head, char *name, int address);
+
+    /*adds an address to an existsing symbol, assumes the symbol already exists*/
+Bool addSymbolAddress(Symbol *smbl, int address);
 
 /*End Functions*/
 
