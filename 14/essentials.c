@@ -44,6 +44,7 @@ void printInBinary(unsigned int num){
     }
 }
 
+
 char* addExtToFilename(char* ext, char* fileName, int num){
     char *temp;
     temp = (char*) malloc(sizeof(char) * MAX_LINE + 1);
@@ -55,6 +56,7 @@ char* addExtToFilename(char* ext, char* fileName, int num){
     return temp;
 }
 
+
 int findOP(const char *str){
     int i;
     for(i = 0; i<OP_NUM; i++) {
@@ -65,6 +67,7 @@ int findOP(const char *str){
     return -1;
 }
 
+
 int findReg(const char *str) {
     int i;
     for(i=0; i<REG_NUM; i++) {
@@ -74,6 +77,7 @@ int findReg(const char *str) {
     }
     return -1;
 }
+
 
 Macro* findMacro(Macro **head, char* name){
     Macro *temp;
@@ -87,6 +91,7 @@ Macro* findMacro(Macro **head, char* name){
     }
     return NULL;
 }
+
 
 Bool addMacro(Macro **head, char* name, char* definition) {
     Macro *new_macro, *temp;
@@ -124,6 +129,7 @@ Bool addMacro(Macro **head, char* name, char* definition) {
     return true;
 }
 
+
 Bool addMacroDefinition(Macro *macro, char* newdef) {
     char *temp;
     if(macro == NULL || newdef == NULL) {
@@ -140,6 +146,7 @@ Bool addMacroDefinition(Macro *macro, char* newdef) {
     return true;
 }
 
+
 void printMacros(Macro **head){
     Macro *temp;
     temp = *head;
@@ -151,11 +158,12 @@ void printMacros(Macro **head){
     }
 }
 
+
 void freeMacros(Macro **head){
     Macro *curr, *next;
     curr = *head;
-    if(curr == NULL)
-        return;
+    /*if(curr == NULL)
+        return;*/
     while(curr != NULL){
         next = curr->next;
         free(curr->name);
@@ -163,7 +171,9 @@ void freeMacros(Macro **head){
         free(curr);
         curr = next;
     }
+    return;
 }
+
 
 Bool addERR(ERR **head, char* msg, int line_num){
     ERR *temp;
@@ -198,6 +208,7 @@ Bool addERR(ERR **head, char* msg, int line_num){
     return true;
 }
 
+
 void printERR(ERR **head){
     ERR *temp;
     temp = *head;
@@ -211,18 +222,21 @@ void printERR(ERR **head){
     }
 }
 
+
 void freeERR(ERR **head){
     ERR *curr, *next;
     curr = *head;
-    if(curr == NULL)
-        return;
+    /*if(curr == NULL)
+        return;*/
     while(curr != NULL){
         next = curr->next;
         free(curr->errmsg);
         free(curr);
         curr = next;
     }
+    return;
 }
+
 
 Symbol* findSymbol(Symbol **head, char *name){
     Symbol *temp;
@@ -236,6 +250,7 @@ Symbol* findSymbol(Symbol **head, char *name){
     }
     return NULL;
 }
+
 
 Bool addSymbol(Symbol **head, char *name, int address, SymbolType type){
     Symbol *new_symbol, *temp;
@@ -254,6 +269,7 @@ Bool addSymbol(Symbol **head, char *name, int address, SymbolType type){
 
     new_symbol->address = address;
     new_symbol->type = type;
+    new_symbol->next = NULL;
 
     if(temp == NULL){
         *head = new_symbol;
@@ -267,11 +283,85 @@ Bool addSymbol(Symbol **head, char *name, int address, SymbolType type){
     return true;
 }
 
+
 Bool addSymbolAddress(Symbol *smbl, int address){
     if(smbl == NULL){
         return false;
     }
     smbl->address = address;
     return true;
+}
+
+
+void freeSymbols(Symbol **head){
+    Symbol *curr, *next;
+    curr = *head;
+    while(curr != NULL){
+        next = curr->next;
+        free(curr->name);
+        free(curr);
+        curr = next;
+    }
+    return;
+}
+
+
+Bool addMachineCode(MachineCode **head, int code, int address){
+    MachineCode *new, *temp;
+    temp = *head;
+
+    new = (MachineCode*)malloc(sizeof(MachineCode));
+    if(new == NULL){
+        return false;
+    }
+
+    new->code = code;
+    new->address = address;
+    new->next = NULL;
+
+    if(temp == NULL){
+        *head = new;
+    }
+    else{
+        while(temp->next != NULL){
+            temp = temp->next;
+        }
+        temp->next = new;
+    }
+    return true;
+}
+
+
+MachineCode* findMachineCode(MachineCode **head, int address){
+    MachineCode *temp;
+    temp = *head;
+    while(temp != NULL){
+        if(temp->address == address){
+            return temp;
+        }
+        temp = temp->next;
+    }
+    return NULL;
+}
+
+
+Bool addCodeToMC(MachineCode *mc, int code){
+    if(mc==NULL){
+        return false;
+    }
+    mc->code = code;
+    return true;
+}
+
+
+void freeMCs(MachineCode **head){
+    MachineCode *curr, *next;
+    curr = *head;
+    while(curr != NULL){
+        next = curr->next;
+        free(curr);
+        curr = next;
+    }
+    return;
 }
 /*End Functions*/

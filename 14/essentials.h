@@ -61,43 +61,52 @@
 
 
 /* Structs */
-typedef struct _macro {
+typedef struct _macro { /*to store macros and their definitions*/
     char *name;
     char *definition;
     struct _macro* next;
 } Macro;
 
-typedef enum _symbol_type{
+
+typedef enum _symbol_type{ /*denoting whether a symbol is entry, extern or none*/
     none,
     ent,
     ext
 } SymbolType;
 
-typedef struct _symbol{
+
+typedef struct _symbol{ /*used to store the symbol tables*/
     char *name;
-    int address;
+    int address; /*starting from 100 based on project instructions*/
     SymbolType type;
     struct _symbol* next;
 } Symbol;
 
 
-typedef enum _bool {
+typedef struct _machine_code{ /*used to store the machine code generated from the files*/
+    int code;
+    int address;
+    struct _machine_code *next;
+} MachineCode;
+
+
+typedef enum _bool { /*true or false*/
     false,
     true
 } Bool;
 
 
-typedef struct _op {
+typedef struct _op { /*used to store the language operations, their defined codes, and how many operands they accept*/
     char* name;
     int opcode;
     int opr_num;
 } OP;
 
 
-typedef struct _err{
+typedef struct _err{ /*used to store all generated errors*/
     char *errmsg;
-    struct _err* next;
     int line_num;
+    struct _err* next;
 } ERR;
 /*End Structs*/
 
@@ -146,6 +155,22 @@ Bool addSymbol(Symbol **head, char *name, int address, SymbolType type);
 
     /*adds an address to an existsing symbol, assumes the symbol already exists*/
 Bool addSymbolAddress(Symbol *smbl, int address);
+
+    /*frees all allocated space for symbols*/
+void freeSymbols(Symbol **head);
+
+    /*adds a new MachineCode instance.
+    **code for symbols in the first pass should be zero, and changed later via the address*/
+Bool addMachineCode(MachineCode **head, int code, int address);
+
+    /*finds a machinecode instance via the given address, returns NULL if not found*/
+MachineCode* findMachineCode(MachineCode **head, int address);
+
+    /*adds binary code to a given MachineCode instance*/
+Bool addCodeToMC(MachineCode *mc, int code);
+
+    /*frees all allocated space for MachineCode*/
+void freeMCs(MachineCode **head);
 
 /*End Functions*/
 
