@@ -69,13 +69,14 @@ typedef struct _macro {
 
 typedef enum _symbol_type{
     none,
-    entry,
-    extern
+    ent,
+    ext
 } SymbolType;
 
 typedef struct _symbol{
     char *name;
     int address;
+    SymbolType type;
     struct _symbol* next;
 } Symbol;
 
@@ -141,7 +142,7 @@ void freeERR(ERR **head);
 Symbol* findSymbol(Symbol **head, char *name);
 
     /*creates a new symbol, assumes symbol with the same name doesn't exist*/
-Bool addSymbol(Symbol **head, char *name, int address);
+Bool addSymbol(Symbol **head, char *name, int address, SymbolType type);
 
     /*adds an address to an existsing symbol, assumes the symbol already exists*/
 Bool addSymbolAddress(Symbol *smbl, int address);
