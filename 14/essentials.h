@@ -55,6 +55,8 @@
 #define EXT_OBJECT ".ob"
 #define EXT_ENTRIES ".ent"
 #define EXT_EXTERNALS ".ext"
+#define ENTRY ".entry"
+#define EXTERN ".extern"
 /*End Definitions*/
 
 
@@ -64,6 +66,12 @@ typedef struct _macro {
     char *definition;
     struct _macro* next;
 } Macro;
+
+typedef enum _symbol_type{
+    none,
+    entry,
+    extern
+} SymbolType;
 
 typedef struct _symbol{
     char *name;
