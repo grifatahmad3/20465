@@ -3,4 +3,4 @@ project(myassm C)
 
 set(CMAKE_C_STANDARD 90)
 set(CMAKE_CXX_FLAGS "-Wall -pedantic -ansi")
-add_executable(myassm myassm.c essentials.c essentials.h preasm.c preasm.h)
+add_executable(myassm myassm.c essentials.c essentials.h preasm.c preasm.h firstpass.c firstpass.h)

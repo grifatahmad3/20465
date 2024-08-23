@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "myassm::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-myassm-Debug-fa4fe4ea7da9c61db0ca.json",
+					"jsonFile" : "target-myassm-Debug-2dbbe3b0f4c88ee091ee.json",
 					"name" : "myassm",
 					"projectIndex" : 0
 				}
@@ -49,12 +49,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/poseidon/20465/14/cmake-build-debug",
-		"source" : "/home/poseidon/20465/14"
+		"build" : "/home/user/projects/20465/14/cmake-build-debug",
+		"source" : "/home/user/projects/20465/14"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 6
+		"minor" : 7
 	}
 }

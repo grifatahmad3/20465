@@ -21,10 +21,11 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
     */
     
     char *filer, *filew; /*filer = file to read, filew = file to write*/
-    char line[MAX_LINE+1], str[MAX_LINE+1], macroName[MAX_LINE+1];
+    char line[MAX_LINE+1], str[MAX_LINE+1], macroName[MAX_LINE+1] = "\0";
     FILE *fpr, *fpw; /*fpr = file pointer to read, fpw = file pointer to write*/
     Bool inMacro;
     int line_num = 0;
+    char *token;
 
     inMacro = false;
     filer = addExtToFilename(EXT_ORIGIN, filename, strlen(EXT_ORIGIN));
@@ -60,35 +61,50 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
 
         line_num++;
 
-        strcpy(str, "");
-        if(sscanf(line, "%s", str) < 1){
+        strcpy(str, line);
+        token = strtok(str, " \t\n");
+        /*if(sscanf(line, "%s", str) < 1){
+            continue;
+        }*/
+        if(token == NULL){
             continue;
         }
+        /*if(strcmp(token, "\n")==0){
+            continue;
+        }*/
+
         /*step 6:*/
-        if(inMacro == true && strcmp(str, "endmacr")!=0) {
+        if(inMacro == true && strcmp(token /*str*/, "endmacr")!=0) {
             addMacroDefinition(findMacro(macros, macroName), line);
             continue;
         }
 
         /*step 7 and 8: */
-        if(!strcmp(str, "endmacr")) {
+        if(strcmp(token /*str*/, "endmacr") == 0) {
+            token = strtok(NULL, " \t\n");
+            if(token!=NULL && strcmp(token, "\n")!=0){
+                addERR(err, TOO_MUCH_ARGUMENTS, line_num);
+                break;
+            }
             inMacro=false;
             continue;
         }
 
         /*step 2:*/
-        if(findMacro(macros, str)!=NULL) {
-            fputs(findMacro(macros, str)->definition, fpw);
+        if(findMacro(macros, token /*str*/)!=NULL) {
+            fputs(findMacro(macros, token /*str*/)->definition, fpw);
             continue;
         }
 
         /*step 3:*/
-        if(!strcmp(str, "macr")) {
+        if(strcmp(token /*str*/, "macr") == 0) {
             /*step 4*/
             inMacro = true;
             /*step 5*/
-            if(sscanf(line, "%s %s", str, macroName)==2) {
-                if(findMacro(macros,macroName)==NULL && findOP(macroName)==-1 && findReg(macroName)==-1){
+            token = strtok(NULL, " \t\n");
+            if(token != NULL && strcmp(token, "\n")!=0 /*sscanf(line, "%s %s", str, macroName)==2*/) {
+                strcpy(macroName, token);
+                if(findMacro(macros, macroName)==NULL && findOP(macroName)==-1 && findReg(macroName)==-1){
                     if(addMacro(macros, macroName, "") == false) {
                         addERR(err, MACRO_ADD_FAIL, line_num);
                         break;
@@ -101,6 +117,11 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
             }
             else {
                 addERR(err, WORD_FAILED, line_num);
+                break;
+            }
+            token = strtok(NULL, " \t\n");
+            if(token != NULL && strcmp(token, "\n")!=0){
+                addERR(err, TOO_MUCH_ARGUMENTS, line_num);
                 break;
             }
             continue;

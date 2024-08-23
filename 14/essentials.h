@@ -21,6 +21,7 @@
 #define NAME_TOO_LONG "Overflow: The instruction name is too long!\n"
 #define FILE_ERROR "File Error! Can't open or create file!!\n"
 #define MACRO_ADD_FAIL "Failed creating a new macro!\n"
+#define TOO_MUCH_ARGUMENTS "Too much Arguemnts! expected less...\n"
 #define WORD_FAILED "Failed reading word!\n"
 #define ILLEGAL_MACRO_NAME "Illegal macro name!\n"
 /*End Errors*/

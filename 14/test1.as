@@ -3,7 +3,7 @@
  macr m_macr
  cmp r3,#-6
  bne END
- endmacr
+ endmacr hi
  lea STR,r6
  inc r6
  mov *r6,K
