@@ -306,7 +306,7 @@ void freeSymbols(Symbol **head){
 }
 
 
-Bool addMachineCode(MachineCode **head, int code, int address){
+Bool addMachineCode(MachineCode **head, int code, int address, char* label){
     MachineCode *new, *temp;
     temp = *head;
 
@@ -317,6 +317,19 @@ Bool addMachineCode(MachineCode **head, int code, int address){
 
     new->code = code;
     new->address = address;
+
+    if(label == NULL){
+        new->label = NULL; 
+    }
+    else{
+        new->label = (char*)malloc(sizeof(char)*strlen(label) + 1);
+        if(new->label == NULL){
+            free(new);
+            return false;
+        }
+        strcpy(new->label, label);
+    }
+
     new->next = NULL;
 
     if(temp == NULL){
@@ -332,11 +345,24 @@ Bool addMachineCode(MachineCode **head, int code, int address){
 }
 
 
-MachineCode* findMachineCode(MachineCode **head, int address){
+MachineCode* findMCAddress(MachineCode **head, int address){
     MachineCode *temp;
     temp = *head;
     while(temp != NULL){
         if(temp->address == address){
+            return temp;
+        }
+        temp = temp->next;
+    }
+    return NULL;
+}
+
+
+MachineCode* findMCLabel(MachineCode **head, char *label){
+    MachineCode *temp;
+    temp = *head;
+    while(temp != NULL){
+        if(strcmp(temp->label, label) == 0){
             return temp;
         }
         temp = temp->next;

@@ -86,6 +86,7 @@ typedef struct _symbol{ /*used to store the symbol tables*/
 typedef struct _machine_code{ /*used to store the machine code generated from the files*/
     int code;
     int address;
+    char *label; /*optional, used for first pass to know where labels (symbols) should go*/
     struct _machine_code *next;
 } MachineCode;
 
@@ -161,10 +162,13 @@ void freeSymbols(Symbol **head);
 
     /*adds a new MachineCode instance.
     **code for symbols in the first pass should be zero, and changed later via the address*/
-Bool addMachineCode(MachineCode **head, int code, int address);
+Bool addMachineCode(MachineCode **head, int code, int address, char* label);
 
     /*finds a machinecode instance via the given address, returns NULL if not found*/
-MachineCode* findMachineCode(MachineCode **head, int address);
+MachineCode* findMCAddress(MachineCode **head, int address);
+
+    /*returns the machinecode instance that has a matching label, NULL otherwise*/
+MachineCode* findMCLabel(MachineCode **head, char *label);
 
     /*adds binary code to a given MachineCode instance*/
 Bool addCodeToMC(MachineCode *mc, int code);
