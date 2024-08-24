@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "firstpass.h"
 #include "essentials.h"
 
@@ -140,7 +141,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
                     }
                 }
                 else{ /*- if symbol doesn't exist, add to symbols with sfor=data and address=DC and type=none. */
-                    if(addSymbol(symbols, temp_symbol, *DC, forData, none)==false){
+                    if(addSymbol(symbols, temp_str, *DC, forData, none)==false){
                         addERR(err, MALLOC_ERROR, line_num);
                         continue;
                     }

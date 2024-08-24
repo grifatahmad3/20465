@@ -400,7 +400,7 @@ Bool isLegalSymbolName(char *name){
         return false;
     }
     while(i<strlen(name)){
-        if(!alphanum(*(name+i))){
+        if(!isalnum(*(name+i))){
             return false;
         }
     }
