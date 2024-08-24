@@ -32,6 +32,7 @@
 #define MAX_LINE 81 /* 80 + '\n' */
 #define OP_NUM 16
 #define RAM_SIZE 4096
+#define STARTING_ADDRESS 100
 #define WORD_SIZE 15
 #define MAX_NUMBER 2047 /* 12 bits in 2's complement, as we only have 12 bits for storing numbers*/
 #define MIN_NUMBER -2048 /* same as above*/
