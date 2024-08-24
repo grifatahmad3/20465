@@ -57,9 +57,13 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
         return false;
     }
 
-    while (fgets(line, MAX_LINE, fpr) != NULL /*step 1*/) {
+    while (fgets(line, MAX_LINE+1, fpr) != NULL /*step 1*/) {
 
         line_num++;
+        if(strlen(line)==MAX_LINE && *(line+(MAX_LINE-1))!='\n'){
+            addERR(err, LINE_TOO_LONG, line_num);
+            break;
+        }
 
         strcpy(str, line);
         token = strtok(str, " \t\n");

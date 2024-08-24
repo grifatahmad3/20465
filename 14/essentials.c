@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "essentials.h"
 
 /*Objects*/
@@ -390,5 +391,19 @@ void freeMCs(MachineCode **head){
         curr = next;
     }
     return;
+}
+
+
+Bool isLegalSymbolName(char *name){
+    int i=0;
+    if(!isalpha(*name) || strlen(name)>MAX_SYMBOL_NAME){
+        return false;
+    }
+    while(i<strlen(name)){
+        if(!alphanum(*(name+i))){
+            return false;
+        }
+    }
+    return true;
 }
 /*End Functions*/

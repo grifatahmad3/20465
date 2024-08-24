@@ -19,11 +19,16 @@
 /*Errors*/
 #define MALLOC_ERROR "Failed memory allocation!\n"
 #define NAME_TOO_LONG "Overflow: The instruction name is too long!\n"
+#define LINE_TOO_LONG "Overflow: The line is too long!\n"
 #define FILE_ERROR "File Error! Can't open or create file!!\n"
 #define MACRO_ADD_FAIL "Failed creating a new macro!\n"
 #define TOO_MUCH_ARGUMENTS "Too much Arguemnts! expected less...\n"
 #define WORD_FAILED "Failed reading word!\n"
 #define ILLEGAL_MACRO_NAME "Illegal macro name!\n"
+#define RAM_EMPTY "Out of RAM! No availabe RAM...\n"
+#define ILLEGAL_SYMBOL_NAME "Illegal symbol name!\n"
+#define SYMBOL_EXISTS "Symbol with such name already exists!\n"
+#define SYMBOL_EMPTY "Illegal! Empty symbol declaration!\n"
 /*End Errors*/
 
 
@@ -37,6 +42,7 @@
 #define MAX_NUMBER 2047 /* 12 bits in 2's complement, as we only have 12 bits for storing numbers*/
 #define MIN_NUMBER -2048 /* same as above*/
 #define REG_NUM 8
+#define MAX_SYMBOL_NAME 31
 #define MAX_OP_LINES 3 /* Maximum number of lines each operation could generate in binary*/
 #define IMM_ACCESS 1 /* immediate access: 0001 */
 #define DIR_ACCESS 2 /* direct access: 0010 */
@@ -56,6 +62,8 @@
 #define EXT_OBJECT ".ob"
 #define EXT_ENTRIES ".ent"
 #define EXT_EXTERNALS ".ext"
+#define DATA ".data"
+#define STRING ".string"
 #define ENTRY ".entry"
 #define EXTERN ".extern"
 /*End Definitions*/
@@ -182,6 +190,9 @@ Bool addCodeToMC(MachineCode *mc, int code);
 
     /*frees all allocated space for MachineCode*/
 void freeMCs(MachineCode **head);
+
+    /*checks whether a symbol name is legal or not, does not check whether the symbol exists or not!*/
+Bool isLegalSymbolName(char *name);
 
 /*End Functions*/
 
