@@ -252,7 +252,7 @@ Symbol* findSymbol(Symbol **head, char *name){
 }
 
 
-Bool addSymbol(Symbol **head, char *name, int address, SymbolType type){
+Bool addSymbol(Symbol **head, char *name, int address, SymbolFor sfor, SymbolType type){
     Symbol *new_symbol, *temp;
     temp = *head;
 
@@ -268,6 +268,7 @@ Bool addSymbol(Symbol **head, char *name, int address, SymbolType type){
     }
 
     new_symbol->address = address;
+    new_symbol->sfor = sfor;
     new_symbol->type = type;
     new_symbol->next = NULL;
 

@@ -11,12 +11,16 @@ int main(int argc, char *argv[]){
     ERR *err;
     Macro *macros;
     Symbol *symbols;
+    MachineCode *inst; /*the instructions body*/
+    MachineCode *data; /*the data body*/
     int i = 1;
-    int IC=100, DC=100;
+    int IC=0, DC=0;
 
 
     macros = NULL;
     symbols = NULL;
+    inst = NULL;
+    data = NULL;
 
     while(i < argc){
         err = NULL; /*new err list for each file*/
@@ -37,7 +41,7 @@ int main(int argc, char *argv[]){
 
         /*start first pass*/
         printf(FIRSTPASS_START);
-        if(startFirstPass(argv[i], &macros, &err, &symbols, &IC, &DC) == false){
+        if(startFirstPass(argv[i], &macros, &err, &symbols, &IC, &DC, &inst, &data) == false){
             if(err!=NULL){
                 printERR(&err);
                 freeERR(&err);

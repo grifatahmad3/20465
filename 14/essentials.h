@@ -74,10 +74,16 @@ typedef enum _symbol_type{ /*denoting whether a symbol is entry, extern or none*
     ext
 } SymbolType;
 
+typedef enum _symbol_for{ /*denoting whether it's an instruction symbol or data symbol*/
+    forNone, /*used for externals*/
+    forInst,
+    forData
+} SymbolFor;
 
 typedef struct _symbol{ /*used to store the symbol tables*/
     char *name;
-    int address; /*starting from 100 based on project instructions*/
+    int address;
+    SymbolFor sfor;
     SymbolType type;
     struct _symbol* next;
 } Symbol;
@@ -152,7 +158,7 @@ void freeERR(ERR **head);
 Symbol* findSymbol(Symbol **head, char *name);
 
     /*creates a new symbol, assumes symbol with the same name doesn't exist*/
-Bool addSymbol(Symbol **head, char *name, int address, SymbolType type);
+Bool addSymbol(Symbol **head, char *name, int address, SymbolFor sfor, SymbolType type);
 
     /*adds an address to an existsing symbol, assumes the symbol already exists*/
 Bool addSymbolAddress(Symbol *smbl, int address);
