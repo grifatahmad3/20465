@@ -61,9 +61,12 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
     int line_num = 0;
     char *token;
     Symbol *temp_symbol;
+    int data_array[MAX_LINE];
+    size_t array_size;
+    int index = 0;
 
-    *IC = 0; /*step 1*/
-    *DC = 0;
+    (*IC) = 0; /*step 1*/
+    (*DC) = 0;
     
     filer = addExtToFilename(EXT_PREASM, filename, strlen(EXT_PREASM));
     if (filer == NULL) {
@@ -151,7 +154,29 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
             step 7
             recognize the type of data (.data or .string?), add to MachineCode **data with address of DC, 
             update DC accordingly, and enter with the label symbol for the first line. jump to 2*/
+            if(strcmp(token, DATA)==0){
+                token = strtok(line_copy, " \t\n");
+                if(token==NULL){
+                    addERR(err, ILLEGAL_FORMAT, line_num);
+                    continue;
+                }
+                if(parse_line_data(token, data_array, &array_size) == false){
+                    addERR(err, ILLEGAL_FORMAT, line_num);
+                    continue;
+                }
+                for(index=0; index<array_size; index++){
+                    if(addMachineCode(data, 0+data_array[index], *DC, index==0?temp_str:"") == false){
+                        addERR(err, MALLOC_ERROR, line_num);
+                        continue;
+                    }
+                    (*DC)++;
+                }
+                continue;
+            }
 
+            if(strcmp(token, STRING) == 0){
+                parse_line_string();
+            }
         }
 
 
@@ -162,5 +187,88 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
             continue;
         }
     }
+    return true;
+}
+
+
+Bool is_number(char *str) {
+    if (*str == '+' || *str == '-') {
+        str++;
+        }
+    if (*str == '\0'){
+        return false;
+    } 
+    while (*str) {
+        if (!isdigit(*str)) return false;
+        str++;
+    }
+    return true;
+}
+
+Bool parse_line_data(char *token, int *array, size_t *size) {
+    size_t index = 0;
+    char temp_line[MAX_LINE] = "";
+    char *ptr = temp_line;
+    char buffer[WORD_SIZE];
+    Bool expect_number = true;
+
+    while(token!=NULL){
+        strcat(temp_line, token);
+        token = strtok(NULL, "");
+    }
+
+    memset(buffer, 0, sizeof(buffer));
+
+    while (*ptr) {
+        while (isspace(*ptr)) {
+            ptr++;
+        }
+
+        if (*ptr == '\0') {
+            if (expect_number) return false;
+            break;
+        }
+
+        if (expect_number) {
+            char *buf_ptr = buffer;
+            while (*ptr && !isspace(*ptr) && *ptr != ',') {
+                if ((buf_ptr - buffer) < sizeof(buffer) - 1) {
+                    *buf_ptr++ = *ptr;
+                }
+                ptr++;
+            }
+            *buf_ptr = '\0';
+
+            if (*buffer == '\0' || !is_number(buffer)){
+                return false;
+            } 
+
+            array[index++] = atoi(buffer);
+            if (index >= MAX_LINE){
+                return false;
+            }
+
+            memset(buffer, 0, sizeof(buffer));
+
+            expect_number = false;
+        }
+
+        while (isspace(*ptr)) {
+            ptr++;
+        }
+
+        if (*ptr == ',') {
+            ptr++;
+            expect_number = true;
+        } else if (*ptr != '\0') {
+            return false;
+        }
+    }
+
+    if (expect_number) {
+        return false;
+    }
+
+    *size = index;
     return true;
 }

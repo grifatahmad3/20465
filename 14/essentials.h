@@ -29,6 +29,7 @@
 #define ILLEGAL_SYMBOL_NAME "Illegal symbol name!\n"
 #define SYMBOL_EXISTS "Symbol with such name already exists!\n"
 #define SYMBOL_EMPTY "Illegal! Empty symbol declaration!\n"
+#define ILLEGAL_FORMAT "Illegal format!!\n"
 /*End Errors*/
 
 
