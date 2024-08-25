@@ -127,6 +127,10 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
                 addERR(err, SYMBOL_EMPTY, line_num);
                 continue;
             }
+            /*if the next word is .entry or .extern then ignore the symbol*/
+            if(strcmp(token, ENTRY) == 0 || strcmp(token, EXTERN)==0){
+                inSymbol = false;
+            }
         }
         
         if(strcmp(token, DATA)==0 || strcmp(token, STRING) == 0){
@@ -173,7 +177,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
                 continue;
             }
 
-            if(strcmp(token, STRING) == 0){
+            else if(strcmp(token, STRING) == 0){
                 token = strtok(NULL, " \t\n");
                 if(token==NULL){
                     addERR(err, ILLEGAL_FORMAT, line_num);
@@ -200,24 +204,73 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
         }
 
 
-        /*  TODO:
-        step 8
-        8- is this .extern or .entry? if no jump to step 11
-    *   9- is this .extern? if yes:
-    *                       - if it doesn't exist, add to Symbols with type=ext, sfor=forNone, address=(0+E_FIELD). jump to step 2
-    *                       - if it does exist then err.
-    *      is this .entry? if yes: 
-    *                       - if it does exist with address!=0, update type=ent.
-    *                       - if it does exist with address==0, add err. //because it could be either entry but not defined or extern
-    *                       - it doesn't exist, add to Symbols with type=ent, sfor=forNone(will be updated when it's found), address=0(unknown).
-    *                       
-    *                      if other tokens exist then add error. jump to step 2
-    * 
-        */
+        /* step 8 */
         if(strcmp(token, ENTRY)==0 || strcmp(token, EXTERN) == 0){
+            if(strcmp(token, EXTERN) == 0){
+                token = strtok(NULL, " \t\n");
+                if(token == NULL){
+                    addERR(err, ILLEGAL_FORMAT, line_num);
+                    continue;
+                }
+                if(isLegalSymbolName(token) == false || (temp_symbol= findSymbol(symbols, token)) != NULL){
+                    addERR(err, ILLEGAL_SYMBOL_NAME, line_num);
+                    continue;
+                }
+                if(addSymbol(symbols, token, 0+E_FIELD, forNone, ext) == false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    continue;
+                }
+                if((token = strtok(NULL, " \t\n"))!=NULL){
+                    addERR(err, ILLEGAL_FORMAT, line_num);
+                    continue;
+                }
+            }
+
+            else if(strcmp(token, ENTRY)==0){
+                token = strtok(NULL, " \t\n");
+                if(token == NULL){
+                    addERR(err, ILLEGAL_FORMAT, line_num);
+                    continue;
+                }
+                if(isLegalSymbolName(token) == false){
+                    addERR(err, ILLEGAL_SYMBOL_NAME, line_num);
+                    continue;
+                }
+                if((temp_symbol= findSymbol(symbols, token)) != NULL && temp_symbol->address!=0){
+                    temp_symbol->type = ent;
+                    /*** LOOK HERE */
+                }
+                if(temp_symbol != NULL && (temp_symbol->address == 0 || temp_symbol->address == 0+E_FIELD)){
+                    addERR(err, ILLEGAL_SYMBOL_NAME, line_num);
+                    continue;
+                }
+                if(temp_symbol == NULL){
+                    if(addSymbol(symbols, token, 0, forNone, ent) == false){
+                        addERR(err, MALLOC_ERROR, line_num);
+                        continue;
+                    }
+                }
+                if((token = strtok(NULL, " \t\n"))!=NULL){
+                    addERR(err, ILLEGAL_FORMAT, line_num);
+                    continue;
+                }
+            }
             continue;
         }
 
+        /*TODO:
+        step 10*/
+        
+        /*10- if isSymbol==true: - if it does exist with address!=0, add err.
+    *                          - if it does exist with address==0, update it with sfor=forInst, address=IC, and add the line
+    *                                to MachineCode **inst with the first line having label=symbol
+    *                          - if it doesn't exist, add to Symbols with sfor=forInst, type=none, address=IC 
+    *                               and add the line to MachineCode **inst with the first line having label=symbol
+    *   11- search if the first token (maybe second symbol) is an operation. if it's not then err.
+    *   12- proccess the line into machine code and calculate how much binary lines are needed (= L).
+    *       build the code and add to MachineCode **inst.
+    *   13- update IC = IC+L, jump to 2.
+    *   14- finished reading the file, if err!=NULL don't go to 2nd stage and print all errs.*/
         
     }
 
