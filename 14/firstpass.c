@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "firstpass.h"
 #include "essentials.h"
 
@@ -216,6 +217,15 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
         if(strcmp(token, ENTRY)==0 || strcmp(token, EXTERN) == 0){
             continue;
         }
+
+        
+    }
+
+
+    fclose(fpr);
+    free(filer);
+    if(*err!=NULL){
+        return false;
     }
     return true;
 }
