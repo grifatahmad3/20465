@@ -151,9 +151,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
                 }
             }
             /*  TODO:
-            step 7
-            recognize the type of data (.data or .string?), add to MachineCode **data with address of DC, 
-            update DC accordingly, and enter with the label symbol for the first line. jump to 2*/
+            step 7 */
             if(strcmp(token, DATA)==0){
                 token = strtok(line_copy, " \t\n");
                 if(token==NULL){
@@ -175,13 +173,40 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
             }
 
             if(strcmp(token, STRING) == 0){
-                parse_line_string();
+                token = strtok(line_copy, " \t\n");
+                if(token==NULL){
+                    addERR(err, ILLEGAL_FORMAT, line_num);
+                    continue;
+                }
+                if(parse_line_string(token, data_array, &array_size) == false){
+                    addERR(err, ILLEGAL_FORMAT, line_num);
+                    continue;
+                }
+                for(index=0; index<array_size-1; index++){
+                    if(addMachineCode(data, 0+(unsigned char)data_array[index], *DC, index==0?temp_str:"") == false){
+                        addERR(err, MALLOC_ERROR, line_num);
+                        continue;
+                    }
+                    (*DC)++;
+                }
+                continue;
             }
         }
 
 
         /*  TODO:
         step 8
+        8- is this .extern or .entry? if no jump to step 11
+    *   9- is this .extern? if yes:
+    *                       - if it doesn't exist, add to Symbols with type=ext, sfor=forNone, address=(0+E_FIELD). jump to step 2
+    *                       - if it does exist then err.
+    *      is this .entry? if yes: 
+    *                       - if it does exist with address!=0, update type=ent.
+    *                       - if it does exist with address==0, add err. //because it could be either entry but not defined or extern
+    *                       - it doesn't exist, add to Symbols with type=ent, sfor=forNone(will be updated when it's found), address=0(unknown).
+    *                       
+    *                      if other tokens exist then add error. jump to step 2
+    * 
         */
         if(strcmp(token, ENTRY)==0 || strcmp(token, EXTERN) == 0){
             continue;
@@ -214,7 +239,7 @@ Bool parse_line_data(char *token, int *array, size_t *size) {
 
     while(token!=NULL){
         strcat(temp_line, token);
-        token = strtok(NULL, "");
+        token = strtok(NULL, "\n");
     }
 
     memset(buffer, 0, sizeof(buffer));
@@ -243,10 +268,11 @@ Bool parse_line_data(char *token, int *array, size_t *size) {
                 return false;
             } 
 
-            array[index++] = atoi(buffer);
-            if (index >= MAX_LINE){
+            array[index] = atoi(buffer);
+            if (index+1 >= MAX_LINE || array[index] > MAX_DATA_NUM || array[index] < MIN_DATA_NUM){
                 return false;
             }
+            index++;
 
             memset(buffer, 0, sizeof(buffer));
 
@@ -271,4 +297,29 @@ Bool parse_line_data(char *token, int *array, size_t *size) {
 
     *size = index;
     return true;
+}
+
+Bool parse_line_string(char *token, int *array, size_t *size){
+    char temp_line[MAX_LINE] = "";
+    int i = 1;
+    *size = 0;
+    if(token == NULL || *token != '\"'){
+        return false;
+    }
+    (*size)++;
+    while(token != NULL){
+        strcat(temp_line, token);
+        token = strtok(NULL, "\n");
+    }
+    for(i=1; i<MAX_LINE; i++){
+        if(temp_line[i] == '\"'){
+            if(i<MAX_LINE-2 && temp_line[i+1]){
+                return false;
+            }
+            return true;
+        }
+        *(array+i-1) = (unsigned char)temp_line[i];
+        (*size)++;
+    }
+    return false;
 }

@@ -40,6 +40,8 @@
 #define RAM_SIZE 4096
 #define STARTING_ADDRESS 100
 #define WORD_SIZE 15
+#define MAX_DATA_NUM 16383 /* 14 bits in 2's complement */
+#define MIN_DATA_NUM -16384 /* same as above */
 #define MAX_NUMBER 2047 /* 12 bits in 2's complement, as we only have 12 bits for storing numbers*/
 #define MIN_NUMBER -2048 /* same as above*/
 #define REG_NUM 8
