@@ -189,6 +189,11 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
                     }
                     (*DC)++;
                 }
+                if(addMachineCode(data, 0, *DC, "") == false){ /*adding the last '\0'*/
+                        addERR(err, MALLOC_ERROR, line_num);
+                        continue;
+                    }
+                (*DC)++;
                 continue;
             }
         }

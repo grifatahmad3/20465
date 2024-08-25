@@ -178,8 +178,7 @@ Bool addSymbolAddress(Symbol *smbl, int address);
     /*frees all allocated space for symbols*/
 void freeSymbols(Symbol **head);
 
-    /*adds a new MachineCode instance.
-    **code for symbols in the first pass should be zero, and changed later via the address*/
+    /*adds a new MachineCode instance*/
 Bool addMachineCode(MachineCode **head, int code, int address, char* label);
 
     /*finds a machinecode instance via the given address, returns NULL if not found*/
