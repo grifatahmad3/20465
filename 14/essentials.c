@@ -267,6 +267,7 @@ Bool addSymbol(Symbol **head, char *name, int address, SymbolFor sfor, SymbolTyp
         free(new_symbol);
         return false;
     }
+    strcpy(new_symbol->name, name);
 
     new_symbol->address = address;
     new_symbol->sfor = sfor;
@@ -387,6 +388,7 @@ void freeMCs(MachineCode **head){
     curr = *head;
     while(curr != NULL){
         next = curr->next;
+        free(curr->label);
         free(curr);
         curr = next;
     }
@@ -403,7 +405,54 @@ Bool isLegalSymbolName(char *name){
         if(!isalnum(*(name+i))){
             return false;
         }
+        i++;
     }
     return true;
 }
+
+/* *
+ *
+char *name;
+int address;
+SymbolFor sfor;
+SymbolType type;
+struct _symbol* next;
+} Symbol;*/
+
+
+/* prints the symbols list*/
+void printSymbols(Symbol **head){
+    Symbol *temp;
+    temp = *head;
+    while(temp != NULL){
+        printf("\nSymbol:\n%s\n", temp->name);
+        printf("address=%d\n", temp->address);
+        printf("sfor: %d\n", temp->sfor);
+        printf("type: %d\n", temp->type);
+        temp = temp->next;
+    }
+}
+
+
+/*
+typedef struct _machine_code{
+    int code;
+    int address;
+    char *label;
+    struct _machine_code *next;
+} MachineCode;*/
+
+/* prints the machinecode list*/
+void printMachineCode(MachineCode **head){
+    MachineCode *temp;
+    temp = *head;
+    while(temp!=NULL){
+        printf("\nMC:\n%s\n", temp->label);
+        printf("code: ");
+        printInBinary(temp->code);
+        printf("\naddress: %d\n", temp->address);
+        temp = temp->next;
+    }
+}
+
 /*End Functions*/

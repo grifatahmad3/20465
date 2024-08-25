@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/poseidon/projects/20465/14/cmake-build-debug"
+			"value" : "/home/user/projects/20465/14/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -115,7 +115,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/poseidon/.cache/JetBrains/RemoteDev/dist/7c26c46eeb42c_CLion-242.20224.214/bin/cmake/linux/x64/bin/cmake"
+			"value" : "/home/user/.cache/JetBrains/RemoteDev/dist/7c26c46eeb42c_CLion-242.20224.214/bin/cmake/linux/x64/bin/cmake"
 		},
 		{
 			"name" : "CMAKE_CPACK_COMMAND",
@@ -127,7 +127,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/poseidon/.cache/JetBrains/RemoteDev/dist/7c26c46eeb42c_CLion-242.20224.214/bin/cmake/linux/x64/bin/cpack"
+			"value" : "/home/user/.cache/JetBrains/RemoteDev/dist/7c26c46eeb42c_CLion-242.20224.214/bin/cmake/linux/x64/bin/cpack"
 		},
 		{
 			"name" : "CMAKE_CTEST_COMMAND",
@@ -139,7 +139,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/poseidon/.cache/JetBrains/RemoteDev/dist/7c26c46eeb42c_CLion-242.20224.214/bin/cmake/linux/x64/bin/ctest"
+			"value" : "/home/user/.cache/JetBrains/RemoteDev/dist/7c26c46eeb42c_CLion-242.20224.214/bin/cmake/linux/x64/bin/ctest"
 		},
 		{
 			"name" : "CMAKE_C_COMPILER",
@@ -171,7 +171,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/gcc-ar-13"
+			"value" : "/usr/bin/gcc-ar-11"
 		},
 		{
 			"name" : "CMAKE_C_COMPILER_RANLIB",
@@ -187,7 +187,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/gcc-ranlib-13"
+			"value" : "/usr/bin/gcc-ranlib-11"
 		},
 		{
 			"name" : "CMAKE_C_FLAGS",
@@ -415,7 +415,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/poseidon/projects/20465/14/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "/home/user/projects/20465/14/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -475,7 +475,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/poseidon/projects/20465/14"
+			"value" : "/home/user/projects/20465/14"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -763,7 +763,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/poseidon/.cache/JetBrains/RemoteDev/dist/7c26c46eeb42c_CLion-242.20224.214/bin/cmake/linux/x64/share/cmake-3.29"
+			"value" : "/home/user/.cache/JetBrains/RemoteDev/dist/7c26c46eeb42c_CLion-242.20224.214/bin/cmake/linux/x64/share/cmake-3.29"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
@@ -1039,7 +1039,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/poseidon/projects/20465/14/cmake-build-debug"
+			"value" : "/home/user/projects/20465/14/cmake-build-debug"
 		},
 		{
 			"name" : "myassm_IS_TOP_LEVEL",
@@ -1063,7 +1063,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/poseidon/projects/20465/14"
+			"value" : "/home/user/projects/20465/14"
 		}
 	],
 	"kind" : "cache",

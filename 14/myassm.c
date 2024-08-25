@@ -60,14 +60,26 @@ int main(int argc, char *argv[]){
 
         printf("\n\n");
         i++;
-        if(err!=NULL)
+        if(err!=NULL){
             freeERR(&err);
+        }
+        printSymbols(&symbols);
+        printMachineCode(&inst);
+        printMachineCode(&data);
     }
 
     /* before exiting*/
     if(macros != NULL){
         freeMacros(&macros);
     }
-
+    if(symbols!=NULL){
+        freeSymbols(&symbols);
+    }
+    if(inst!=NULL){
+        freeMCs(&inst);
+    }
+    if(data!=NULL){
+        freeMCs(&data);
+    }
     return 0;
 }

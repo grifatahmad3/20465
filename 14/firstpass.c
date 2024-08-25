@@ -122,7 +122,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
 
         /*step 5*/
         if(inSymbol==true){ /*inside symbol, so we need the next word in the line*/
-            token = strtok(line_copy, " \t\n");
+            token = strtok(NULL, " \t\n");
             if(token==NULL || *token == ';'){
                 addERR(err, SYMBOL_EMPTY, line_num);
                 continue;
@@ -154,7 +154,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
             /*  TODO:
             step 7 */
             if(strcmp(token, DATA)==0){
-                token = strtok(line_copy, " \t\n");
+                token = strtok(NULL, " \t\n");
                 if(token==NULL){
                     addERR(err, ILLEGAL_FORMAT, line_num);
                     continue;
@@ -174,7 +174,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
             }
 
             if(strcmp(token, STRING) == 0){
-                token = strtok(line_copy, " \t\n");
+                token = strtok(NULL, " \t\n");
                 if(token==NULL){
                     addERR(err, ILLEGAL_FORMAT, line_num);
                     continue;

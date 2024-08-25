@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/poseidon/projects/20465/14/cmake-build-debug",
-		"source" : "/home/poseidon/projects/20465/14"
+		"build" : "/home/user/projects/20465/14/cmake-build-debug",
+		"source" : "/home/user/projects/20465/14"
 	},
 	"version" : 
 	{

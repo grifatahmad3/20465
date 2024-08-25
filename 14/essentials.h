@@ -196,6 +196,11 @@ void freeMCs(MachineCode **head);
     /*checks whether a symbol name is legal or not, does not check whether the symbol exists or not!*/
 Bool isLegalSymbolName(char *name);
 
+    /* prints the symbols list*/
+void printSymbols(Symbol **head);
+
+    /* prints the machinecode list*/
+void printMachineCode(MachineCode **head);
 /*End Functions*/
 
 #endif
