@@ -410,15 +410,6 @@ Bool isLegalSymbolName(char *name){
     return true;
 }
 
-/* *
- *
-char *name;
-int address;
-SymbolFor sfor;
-SymbolType type;
-struct _symbol* next;
-} Symbol;*/
-
 
 /* prints the symbols list*/
 void printSymbols(Symbol **head){
@@ -433,14 +424,6 @@ void printSymbols(Symbol **head){
     }
 }
 
-
-/*
-typedef struct _machine_code{
-    int code;
-    int address;
-    char *label;
-    struct _machine_code *next;
-} MachineCode;*/
 
 /* prints the machinecode list*/
 void printMachineCode(MachineCode **head){
