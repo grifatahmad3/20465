@@ -123,7 +123,7 @@ typedef struct _op { /*used to store the language operations, their defined code
 } OP;
 
 typedef enum _opr_type{
-    none,
+    noOp,
     imm,
     dir,
     regIndir,
@@ -149,7 +149,7 @@ char* addExtToFilename(char* ext, char* fileName, int num);
 Macro* findMacro(Macro **head, char* name);
 
     /*Checks whether the given string is an operation or not*/
-int findOP(const char *str);
+OP* findOP(const char *str);
 
     /*Check whether the given string is a register or not*/
 int findReg(const char *str);

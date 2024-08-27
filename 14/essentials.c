@@ -445,10 +445,10 @@ OprType findOprType(char *token){
     int i;
     int size = strlen(token);
     if(token == NULL){
-        return none;
+        return noOp;
     }
-    if(*token!='*' || *token!='r' || *token!='#' || !isalpha(*token)){
-        return none;
+    if(*token!='*' && *token!='r' && *token!='#' && !isalpha(*token)){
+        return noOp;
     }
 
     if(*token=='*' && findReg(token+1)!=-1){
@@ -463,7 +463,7 @@ OprType findOprType(char *token){
                 continue;
             }
             if(!isdigit(*(token+i))){
-                return none;
+                return noOp;
             }
         }
         return imm;
@@ -472,7 +472,7 @@ OprType findOprType(char *token){
         return dir;
     }
     /*else*/
-    return none;
+    return noOp;
 }
 
 /*End Functions*/

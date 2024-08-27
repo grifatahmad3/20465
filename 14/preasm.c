@@ -108,7 +108,7 @@ Bool startPreAsm(char* filename, Macro **macros, ERR **err) {
             token = strtok(NULL, " \t\n");
             if(token != NULL && strcmp(token, "\n")!=0 /*sscanf(line, "%s %s", str, macroName)==2*/) {
                 strcpy(macroName, token);
-                if(findMacro(macros, macroName)==NULL && findOP(macroName)==-1 && findReg(macroName)==-1){
+                if(findMacro(macros, macroName)==NULL && findOP(macroName)==NULL && findReg(macroName)==-1){
                     if(addMacro(macros, macroName, "") == false) {
                         addERR(err, MACRO_ADD_FAIL, line_num);
                         break;
