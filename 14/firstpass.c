@@ -168,7 +168,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
                     continue;
                 }
                 for(index=0; index<array_size; index++){
-                    if(addMachineCode(data, 0+data_array[index], *DC, index==0?temp_str:"") == false){
+                    if(addMachineCode(data, 0+data_array[index], *DC, index==0?temp_str:NULL) == false){
                         addERR(err, MALLOC_ERROR, line_num);
                         continue;
                     }
@@ -188,13 +188,13 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
                     continue;
                 }
                 for(index=0; index<array_size-1; index++){
-                    if(addMachineCode(data, 0+(unsigned char)data_array[index], *DC, index==0?temp_str:"") == false){
+                    if(addMachineCode(data, 0+(unsigned char)data_array[index], *DC, index==0?temp_str:NULL) == false){
                         addERR(err, MALLOC_ERROR, line_num);
                         continue;
                     }
                     (*DC)++;
                 }
-                if(addMachineCode(data, 0, *DC, "") == false){ /*adding the last '\0'*/
+                if(addMachineCode(data, 0, *DC, NULL) == false){ /*adding the last '\0'*/
                         addERR(err, MALLOC_ERROR, line_num);
                         continue;
                     }
@@ -279,13 +279,11 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
         }
 
         /*step 11*/
-        if(findOP(token)!=-1){
-            /*the rest of the steps*/
-            /*
-    *   12- proccess the line into machine code and calculate how much binary lines are needed (= L).
-    *       build the code and add to MachineCode **inst.
-    *   13- update IC = IC+L, jump to 2.*/
-
+        if(findOP(token)!=NULL){
+            if(proccessInstLine(err, inst, IC, token, inSymbol, inSymbol==false?NULL:temp_str, line_num)==false){
+                /*errors are handled inside the function, so no need to add here*/
+                continue;
+            }
         }
         else{
             addERR(err, ILLEGAL_FORMAT, line_num);
@@ -411,4 +409,37 @@ Bool parseLineString(char *token, int *array, size_t *size){
         (*size)++;
     }
     return false;
+}
+
+Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool inSymbol, char *symbolName, int line_num){
+                /*the rest of the steps*/
+            /*
+            add the line to MachineCode**inst in the coming step, with label=symbol_name if (inSymbol==true) to the first line
+    *   12- proccess the line into machine code and calculate how much binary lines are needed (= L).
+    *       build the code and add to MachineCode **inst.
+    *   13- update IC = IC+L, jump to 2.*/
+   char temp_line[MAX_LINE] = "\0";
+   char opr1[MAX_LINE] = "\0"; 
+   char opr2[MAX_LINE] = "\0";
+   int lateral;
+   int code = 0;
+   OP *operation = findOP(token);
+
+   if(operation->opr_num==0){ /*it's rts or stop*/
+        code += (BITS11_14(operation->opcode) + A_FIELD);
+        token = strtok(NULL, " \t\n");
+        if(token != NULL){
+            addERR(err, ILLEGAL_FORMAT, line_num);
+            return false;
+        }
+        if(addMachineCode(inst, code, *IC, symbolName) == false){
+                addERR(err, MALLOC_ERROR, line_num);
+                return false;
+        }
+        (*IC)++;
+        return true;
+   }
+   if(operation->opr_num==1){
+        
+   }
 }

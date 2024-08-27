@@ -58,14 +58,14 @@ char* addExtToFilename(char* ext, char* fileName, int num){
 }
 
 
-int findOP(const char *str){
+OP* findOP(const char *str){
     int i;
     for(i = 0; i<OP_NUM; i++) {
         if(strcmp(str, operations[i].name) == 0){
-            return i;
+            return &(operations[i]);
         }
     }
-    return -1;
+    return NULL;
 }
 
 
@@ -430,7 +430,9 @@ void printMachineCode(MachineCode **head){
     MachineCode *temp;
     temp = *head;
     while(temp!=NULL){
-        printf("\nMC:\n%s\n", temp->label);
+        printf("\nMC:\n");
+        if(temp->label != NULL)
+            printf("label:\n%s\n", temp->label);
         printf("code: ");
         printInBinary(temp->code);
         printf("\naddress: %d\n", temp->address);
