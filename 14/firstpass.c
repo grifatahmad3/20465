@@ -451,7 +451,7 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
             addERR(err, ILLEGAL_FORMAT, line_num);
             return false;
         }
-        if((type1 = isLegalOprName(token)) == none){
+        if((type1 = findOprType(token)) == none){
             addERR(err, ILLEGAL_FORMAT, line_num);
             return false;
         }
@@ -577,11 +577,201 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
 
 
    if(operation->opr_num==2){
-    
+    code_line1 += (BITS11_14(operation->opcode) + A_FIELD);
+        token = strtok(NULL, "\n");
+        if(token == NULL){
+            addERR(err, ILLEGAL_FORMAT, line_num);
+            return false;
+        }
+        if(parseTwoOperands(token, opr1, opr2) == false){
+            addERR(err, ILLEGAL_FORMAT, line_num);
+            return false;
+        }
+        if((type1=findOprType(opr1))==none || (type2=findOprType(opr2)==none)){
+            addERR(err, ILLEGAL_FORMAT, line_num);
+        }
 
+        switch (type1)
+        {
+        case imm:{
+            lateral = atoi(token+1);
+            if(lateral>MAX_NUMBER || lateral<MIN_NUMBER){
+                addERR(err, NUM_OUT_OF_BOUND, line_num);
+                return false;
+            }
+            code_line1 += (BITS7_10(IMM_ACCESS));
+            code_line2 = BITS3_14(lateral)+A_FIELD;
+            break;
+        }
+        case dir:{
+            if(strcmp(token, symbolName)==0){
+                addERR(err, ILLEGAL_FORMAT, line_num);
+                return false;
+            }
+            code_line1 += (BITS7_10(DIR_ACCESS));
+            if((temp_symbol=findSymbol(symbols, token))!=NULL){
+                code_line2 = BITS3_14((temp_symbol->address));
+                if(temp_symbol->type==ent){
+                    code_line2 += (R_FIELD);
+                }
+                if(temp_symbol->type == ext){
+                    code_line2 += (E_FIELD);
+                }
+            }
+            if(temp_symbol==NULL){
+                if(addSymbol(symbols, token, 0, none, none)==false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    return false;
+                }
+                code_line2 = 0;
+            }
+            break;
+        }
+
+        case regDir:{
+            code_line1 += (BITS7_10(DIR_REG_ACCESS));
+            code_line2 += (BITS6_8(findReg(opr1)) + A_FIELD);
+            break;
+        }
+        case regIndir:{
+            code_line1 += (BITS7_10(IND_REG_ACCESS));
+            code_line2 += (BITS6_8(findReg(opr1+1)) + A_FIELD);
+            break;
+        }
+        default:
+            break;
+        }
+
+        switch (type2)
+        {
+        case imm:{
+            lateral = atoi(token+1);
+            if(lateral>MAX_NUMBER || lateral<MIN_NUMBER){
+                addERR(err, NUM_OUT_OF_BOUND, line_num);
+                return false;
+            }
+            code_line1 += (BITS3_6(IMM_ACCESS));
+            code_line3 = BITS3_14(lateral)+A_FIELD;
+            break;
+        }
+        case dir:{
+            if(strcmp(token, symbolName)==0){
+                addERR(err, ILLEGAL_FORMAT, line_num);
+                return false;
+            }
+            code_line1 += (BITS3_6(DIR_ACCESS));
+            if((temp_symbol=findSymbol(symbols, token))!=NULL){
+                code_line3 = BITS3_14((temp_symbol->address));
+                if(temp_symbol->type==ent){
+                    code_line3 += (R_FIELD);
+                }
+                if(temp_symbol->type == ext){
+                    code_line3 += (E_FIELD);
+                }
+            }
+            if(temp_symbol==NULL){
+                if(addSymbol(symbols, token, 0, none, none)==false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    return false;
+                }
+                code_line3 = 0;
+            }
+            break;
+        }
+
+        case regDir:{
+            code_line1 += (BITS3_6(DIR_REG_ACCESS));
+            code_line3 += (BITS3_5(findReg(token)) + A_FIELD);
+            break;
+        }
+        case regIndir:{
+            code_line1 += (BITS3_6(IND_REG_ACCESS));
+            code_line3 += (BITS3_5(findReg(token+1)) + A_FIELD);
+            break;
+        }
+        default:
+            break;
+        }
+
+        if(strcmp(operation->name, "mov")==0){
+            
+        }
     return true;
    }
 
+}
 
-   
+Bool parseTwoOperands(char *token, char *word1, char *word2) {
+    char line_copy[MAX_LINE+1] = "";
+    char *ptr = line_copy;
+    int i = 0;
+
+    if(token==NULL){
+        return false;
+    }
+
+    while(token!=NULL){
+        strcat(line_copy, token);
+        token = strtok(NULL, "\n");
+    }
+
+
+    while (isspace((unsigned char)*ptr)) {
+        ptr++;
+    }
+
+
+    if (*ptr == ',' || *ptr == '\0') {
+        return false;
+    }
+
+    while (*ptr != '\0' && *ptr != ',' && !isspace((unsigned char)*ptr) && i < MAX_LINE) {
+        word1[i++] = *ptr++;
+    }
+    word1[i] = '\0';
+
+
+    while (isspace((unsigned char)*ptr)) {
+        ptr++;
+    }
+
+ 
+    if (*ptr != ',') {
+        return false;
+    }
+    ptr++;
+
+    while (isspace((unsigned char)*ptr)) {
+        ptr++;
+    }
+
+    if (*ptr == ',') {
+        return false; 
+    }
+
+
+    while (isspace((unsigned char)*ptr)) {
+        ptr++;
+    }
+
+
+    if (*ptr == '\0') {
+        return false; 
+    }
+
+    i = 0;
+    while (*ptr != '\0' && *ptr != ',' && !isspace((unsigned char)*ptr) && i < MAX_LINE) {
+        word2[i++] = *ptr++;
+    }
+    word2[i] = '\0';
+
+    while (isspace((unsigned char)*ptr)) {
+        ptr++;
+    }
+
+    if (*ptr != '\0') {
+        return false;
+    }
+
+    return true;
 }
