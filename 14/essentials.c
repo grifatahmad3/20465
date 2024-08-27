@@ -398,7 +398,7 @@ void freeMCs(MachineCode **head){
 
 Bool isLegalSymbolName(char *name){
     int i=0;
-    if(!isalpha(*name) || strlen(name)>MAX_SYMBOL_NAME){
+    if(name == NULL || !isalpha(*name) || strlen(name)>MAX_SYMBOL_NAME){
         return false;
     }
     while(i<strlen(name)){
@@ -438,6 +438,41 @@ void printMachineCode(MachineCode **head){
         printf("\naddress: %d\n", temp->address);
         temp = temp->next;
     }
+}
+
+
+OprType findOprType(char *token){
+    int i;
+    int size = strlen(token);
+    if(token == NULL){
+        return none;
+    }
+    if(*token!='*' || *token!='r' || *token!='#' || !isalpha(*token)){
+        return none;
+    }
+
+    if(*token=='*' && findReg(token+1)!=-1){
+        return regIndir;
+    }
+    if(findReg(token)!=-1){
+        return regDir;
+    }
+    if(*token=='#'){
+        for(i=1; i<size; i++){
+            if(i==1 && (*(token+i)=='-' || *(token+i)=='+')){
+                continue;
+            }
+            if(!isdigit(*(token+i))){
+                return none;
+            }
+        }
+        return imm;
+    }
+    if(isLegalSymbolName(token) == true){
+        return dir;
+    }
+    /*else*/
+    return none;
 }
 
 /*End Functions*/

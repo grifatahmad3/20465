@@ -30,6 +30,7 @@
 #define SYMBOL_EXISTS "Symbol with such name already exists!\n"
 #define SYMBOL_EMPTY "Illegal! Empty symbol declaration!\n"
 #define ILLEGAL_FORMAT "Illegal format!!\n"
+#define NUM_OUT_OF_BOUND "The lateral number is out of bounds of what's allowed!\n"
 /*End Errors*/
 
 
@@ -121,6 +122,14 @@ typedef struct _op { /*used to store the language operations, their defined code
     int opr_num;
 } OP;
 
+typedef enum _opr_type{
+    none,
+    imm,
+    dir,
+    regIndir,
+    regDir
+} OprType;
+
 
 typedef struct _err{ /*used to store all generated errors*/
     char *errmsg;
@@ -201,6 +210,9 @@ void printSymbols(Symbol **head);
 
     /* prints the machinecode list*/
 void printMachineCode(MachineCode **head);
+
+    /*checks whether it's a legal operand name and find its type*/
+OprType findOprType(char *token);
 /*End Functions*/
 
 #endif

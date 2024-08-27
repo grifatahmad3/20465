@@ -280,7 +280,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
 
         /*step 11*/
         if(findOP(token)!=NULL){
-            if(proccessInstLine(err, inst, IC, token, inSymbol, inSymbol==false?NULL:temp_str, line_num)==false){
+            if(proccessInstLine(err, inst, IC, token, inSymbol, inSymbol==false?NULL:temp_str, symbols, line_num)==false){
                 /*errors are handled inside the function, so no need to add here*/
                 continue;
             }
@@ -411,7 +411,7 @@ Bool parseLineString(char *token, int *array, size_t *size){
     return false;
 }
 
-Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool inSymbol, char *symbolName, int line_num){
+Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool inSymbol, char *symbolName, Symbol **symbols, int line_num){
                 /*the rest of the steps*/
             /*
             add the line to MachineCode**inst in the coming step, with label=symbol_name if (inSymbol==true) to the first line
@@ -421,25 +421,167 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
    char temp_line[MAX_LINE] = "\0";
    char opr1[MAX_LINE] = "\0"; 
    char opr2[MAX_LINE] = "\0";
+   OprType type1;
+   OprType type2;
+   Symbol *temp_symbol;
    int lateral;
-   int code = 0;
+   int code_line1 = 0, code_line2 = 0, code_line3 = 0;
    OP *operation = findOP(token);
 
    if(operation->opr_num==0){ /*it's rts or stop*/
-        code += (BITS11_14(operation->opcode) + A_FIELD);
+        code_line1 += (BITS11_14(operation->opcode) + A_FIELD);
         token = strtok(NULL, " \t\n");
         if(token != NULL){
             addERR(err, ILLEGAL_FORMAT, line_num);
             return false;
         }
-        if(addMachineCode(inst, code, *IC, symbolName) == false){
+        if(addMachineCode(inst, code_line1, *IC, symbolName) == false){
                 addERR(err, MALLOC_ERROR, line_num);
                 return false;
         }
         (*IC)++;
         return true;
    }
+
+
    if(operation->opr_num==1){
+        code_line1 += (BITS11_14(operation->opcode) + A_FIELD);
+        token = strtok(NULL, " \t\n");
+        if(token == NULL){
+            addERR(err, ILLEGAL_FORMAT, line_num);
+            return false;
+        }
+        if((type1 = isLegalOprName(token)) == none){
+            addERR(err, ILLEGAL_FORMAT, line_num);
+            return false;
+        }
+
+        switch (type1)
+        {
+        case imm:{
+            lateral = atoi(token+1);
+            if(lateral>MAX_NUMBER || lateral<MIN_NUMBER){
+                addERR(err, NUM_OUT_OF_BOUND, line_num);
+                return false;
+            }
+            code_line1 += (BITS3_6(IMM_ACCESS));
+            code_line2 = BITS3_14(lateral)+A_FIELD;
+            break;
+        }
+        case dir:{
+            if(strcmp(token, symbolName)==0){
+                addERR(err, ILLEGAL_FORMAT, line_num);
+                return false;
+            }
+            code_line1 += (BITS3_6(DIR_ACCESS));
+            if((temp_symbol=findSymbol(symbols, token))!=NULL){
+                code_line2 = BITS3_14((temp_symbol->address));
+                if(temp_symbol->type==ent){
+                    code_line2 += (R_FIELD);
+                }
+                if(temp_symbol->type == ext){
+                    code_line2 += (E_FIELD);
+                }
+            }
+            if(temp_symbol==NULL){
+                if(addSymbol(symbols, token, 0, none, none)==false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    return false;
+                }
+                code_line2 = 0;
+            }
+            break;
+        }
+
+        case regDir:{
+            code_line1 += (BITS3_6(DIR_REG_ACCESS));
+            code_line2 += (BITS3_5(findReg(token)) + A_FIELD);
+            break;
+        }
+        case regIndir:{
+            code_line1 += (BITS3_6(IND_REG_ACCESS));
+            code_line2 += (BITS3_5(findReg(token+1)) + A_FIELD);
+            break;
+        }
+        default:
+            break;
+        }
+
+        if(strcmp(operation->name, "prn")==0){
+            if(addMachineCode(inst, code_line1, *IC, inSymbol==true?symbolName:NULL)==false){
+                addERR(err, MALLOC_ERROR, line_num);
+                return false;
+            }
+            if(inSymbol==true){
+                temp_symbol = findSymbol(symbols, symbolName);
+                temp_symbol->address = *IC;
+                temp_symbol->sfor = forInst;
+            }
+            (*IC)++;
+            if(addMachineCode(inst, code_line2, *IC, NULL)==false){
+                addERR(err, MALLOC_ERROR, line_num);
+                return false;
+            }
+            (*IC)++;
+        }
         
+        if(strcmp(operation->name, "jsr")==0 || 
+           strcmp(operation->name, "bne")==0 ||
+           strcmp(operation->name, "jmp")==0){
+            if(type1==dir || type1==regIndir){
+                if(addMachineCode(inst, code_line1, *IC, NULL)==false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    return false;
+                }
+                if(inSymbol==true){
+                    temp_symbol = findSymbol(symbols, symbolName);
+                    temp_symbol->address = *IC;
+                    temp_symbol->sfor = forInst;
+                 }
+                (*IC)++;
+                if(addMachineCode(inst, code_line2, *IC, NULL)==false){
+                addERR(err, MALLOC_ERROR, line_num);
+                return false;
+                }
+                (*IC)++;
+            }
+            else{
+                addERR(err, ILLEGAL_FORMAT, line_num);
+                return false;
+            }
+        }
+        
+        else {
+            if(type1 == imm){
+                addERR(err, ILLEGAL_FORMAT, line_num);
+                return false;
+            }
+            if(addMachineCode(inst, code_line1, *IC, NULL)==false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    return false;
+                }
+            if(inSymbol==true){
+                temp_symbol = findSymbol(symbols, symbolName);
+                temp_symbol->address = *IC;
+                temp_symbol->sfor = forInst;
+            }
+            (*IC)++;
+            if(addMachineCode(inst, code_line2, *IC, NULL)==false){
+                addERR(err, MALLOC_ERROR, line_num);
+                return false;
+            }
+            (*IC)++;
+        }
+        return true;
    }
+
+
+   if(operation->opr_num==2){
+    
+
+    return true;
+   }
+
+
+   
 }
