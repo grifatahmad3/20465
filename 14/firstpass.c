@@ -142,11 +142,8 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
                         addERR(err, SYMBOL_EXISTS, line_num);
                         continue;
                     }
-                    /*- if symbol exists with type=ent, update it with sfor=data and address=DC.*/
-                    if(temp_symbol->type==ent){
-                        temp_symbol->address = *DC;
-                        temp_symbol->sfor = forData;
-                    }
+                    temp_symbol->address = *DC;
+                    temp_symbol->sfor = forData;
                 }
                 else{ /*- if symbol doesn't exist, add to symbols with sfor=data and address=DC and type=none. */
                     if(addSymbol(symbols, temp_str, *DC, forData, none)==false){
@@ -484,12 +481,12 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
             code_line1 += (BITS3_6(DIR_ACCESS));
             if((temp_symbol=findSymbol(symbols, token))!=NULL){
                 code_line2 = BITS3_14((temp_symbol->address));
-                if(temp_symbol->type==ent){
+                /*if(temp_symbol->type==ent){
                     code_line2 += (R_FIELD);
                 }
                 if(temp_symbol->type == ext){
                     code_line2 += (E_FIELD);
-                }
+                }*/
             }
             if(temp_symbol==NULL){
                 if(addSymbol(symbols, token, -1, forNone, none)==false){
@@ -515,6 +512,13 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
             break;
         }
 
+        if((temp_symbol=findSymbol(symbols, token))!=NULL){
+            str1 = temp_symbol->name;
+        }
+        else{
+            str1 = NULL;
+        }
+
         if(strcmp(operation->name, "prn")==0){
             if(addMachineCode(inst, code_line1, *IC, inSymbol==true?symbolName:NULL)==false){
                 addERR(err, MALLOC_ERROR, line_num);
@@ -526,12 +530,6 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
                 temp_symbol->sfor = forInst;
             }
             (*IC)++;
-            if(temp_symbol!=NULL){
-                str1 = temp_symbol->name;
-            }
-            else{
-                str1 = NULL;
-            }
             if(addMachineCode(inst, code_line2, *IC, str1) == false){
                 addERR(err, MALLOC_ERROR, line_num);
                 return false;
@@ -553,12 +551,6 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
                     temp_symbol->sfor = forInst;
                  }
                 (*IC)++;
-                if(temp_symbol!=NULL){
-                    str1 = temp_symbol->name;
-                }
-                else{
-                    str1 = NULL;
-                }
                 if(addMachineCode(inst, code_line2, *IC, str1) == false){
                 addERR(err, MALLOC_ERROR, line_num);
                 return false;
@@ -586,12 +578,6 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
                 temp_symbol->sfor = forInst;
             }
             (*IC)++;
-            if(temp_symbol!=NULL){
-                str1 = temp_symbol->name;
-            }
-            else{
-                str1 = NULL;
-            }
             if(addMachineCode(inst, code_line2, *IC, str1) == false){
                 addERR(err, MALLOC_ERROR, line_num);
                 return false;
@@ -642,16 +628,27 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
             }
             code_line1 += (BITS7_10(DIR_ACCESS));
             if((temp_symbol=findSymbol(symbols, opr1))!=NULL){
-                code_line2 = BITS3_14((temp_symbol->address));
+                if(temp_symbol->address != -1 && temp_symbol->type!=ext){
+                    code_line2 = BITS3_14((temp_symbol->address));
+                    code_line2 += (R_FIELD);
+                }
+                else {
+                    code_line2 = temp_symbol->address;
+                }
+                if(temp_symbol->sfor==forNone){
+                    temp_symbol->sfor=forData;
+                }
+                /*code_line2 = BITS3_14((temp_symbol->address));
                 if(temp_symbol->type==ent){
                     code_line2 += (R_FIELD);
                 }
                 if(temp_symbol->type == ext){
                     code_line2 += (E_FIELD);
                 }
+                */
             }
             if(temp_symbol==NULL){
-                if(addSymbol(symbols, opr1, -1, forNone, none)==false){
+                if(addSymbol(symbols, opr1, -1, forData, none)==false){
                     addERR(err, MALLOC_ERROR, line_num);
                     return false;
                 }
@@ -693,6 +690,15 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
             }
             code_line1 += (BITS3_6(DIR_ACCESS));
             if((temp_symbol=findSymbol(symbols, opr2))!=NULL){
+                
+                if(temp_symbol->address != -1 && temp_symbol->type!=ext){
+                    code_line3 = BITS3_14((temp_symbol->address));
+                    code_line3 += (R_FIELD);
+                }
+                else {
+                    code_line3 = temp_symbol->address;
+                }
+                /*
                 if(temp_symbol->address!=-1){
                     code_line3 = BITS3_14((temp_symbol->address));
                 }
@@ -701,10 +707,10 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
                 }
                 if(temp_symbol->type == ext){
                     code_line3 += (E_FIELD);
-                }
+                }*/
             }
             if(temp_symbol==NULL){
-                if(addSymbol(symbols, opr2, -1, forNone, none)==false){
+                if(addSymbol(symbols, opr2, -1, forData, none)==false){
                     addERR(err, MALLOC_ERROR, line_num);
                     return false;
                 }
@@ -726,18 +732,22 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
         default:
             break;
         }
+
+
        if((temp_symbol = findSymbol(symbols, opr1)) != NULL){
            str1 = temp_symbol->name;
        }
        else{
            str1 = NULL;
        }
+
        if((temp_symbol = findSymbol(symbols, opr2)) != NULL){
            str2 = temp_symbol->name;
        }
        else{
            str2 = NULL;
        }
+
         if(strcmp(operation->name, "lea")==0){
             if(type1!=dir || type2==imm){
                 addERR(err, ILLEGAL_FORMAT, line_num);
@@ -778,7 +788,7 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
             (*IC)++;
             if((type1==regDir || type1==regIndir) && (type2==regDir || type2==regIndir)){
                 code_line2 += code_line3;
-                if(addMachineCode(inst, code_line2, *IC, str1)==false){
+                if(addMachineCode(inst, code_line2, *IC, NULL)==false){
                     addERR(err, MALLOC_ERROR, line_num);
                     return false;
                 }
@@ -815,14 +825,14 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
             (*IC)++;
             if((type1==regDir || type1==regIndir) && (type2==regDir || type2==regIndir)){
                 code_line2 += code_line3;
-                if(addMachineCode(inst, code_line2, *IC, str1)==false){
+                if(addMachineCode(inst, code_line2, *IC, NULL)==false){
                     addERR(err, MALLOC_ERROR, line_num);
                     return false;
                 }
                 (*IC)++;
             }
             else{
-                if(addMachineCode(inst, code_line2, *IC, str2)==false){
+                if(addMachineCode(inst, code_line2, *IC, str1)==false){
                     addERR(err, MALLOC_ERROR, line_num);
                     return false;
                 }

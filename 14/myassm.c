@@ -4,6 +4,7 @@
 #include "essentials.h"
 #include "preasm.h"
 #include "firstpass.h"
+#include "secondpass.h"
 
 
 int main(int argc, char *argv[]){
@@ -55,17 +56,27 @@ int main(int argc, char *argv[]){
 
         /*start second pass*/
         printf(SECONDPASS_START);
+        if(startSecondPass(argv[i], &err, &symbols, &inst, &data, &IC, &DC)==false){
+            if(err!=NULL){
+                printERR(&err);
+                freeERR(&err);
+            }
+            i++;
+            continue;
+        }
         printf(SECONDPASS_END);
         /*end second pass*/
 
-        printf("\n\n");
+        
         i++;
         if(err!=NULL){
             freeERR(&err);
         }
-        printSymbols(&symbols);
+
+        /*printSymbols(&symbols);
         printMachineCode(&inst);
-        printMachineCode(&data);
+        printMachineCode(&data);*/
+        
     }
 
     /* before exiting*/
