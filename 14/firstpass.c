@@ -163,7 +163,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
                     addERR(err, ILLEGAL_FORMAT, line_num);
                     continue;
                 }
-                if(parse_line_data(token, data_array, &array_size) == false){
+                if(parseLineData(token, data_array, &array_size) == false){
                     addERR(err, ILLEGAL_FORMAT, line_num);
                     continue;
                 }
@@ -183,7 +183,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
                     addERR(err, ILLEGAL_FORMAT, line_num);
                     continue;
                 }
-                if(parse_line_string(token, data_array, &array_size) == false){
+                if(parseLineString(token, data_array, &array_size) == false){
                     addERR(err, ILLEGAL_FORMAT, line_num);
                     continue;
                 }
@@ -305,7 +305,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
 }
 
 
-Bool is_number(char *str) {
+Bool isNumber(char *str) {
     if (*str == '+' || *str == '-') {
         str++;
         }
@@ -319,16 +319,16 @@ Bool is_number(char *str) {
     return true;
 }
 
-Bool parse_line_data(char *token, int *array, size_t *size) {
+Bool parseLineData(char *line, int *array, size_t *size) {
     size_t index = 0;
     char temp_line[MAX_LINE] = "";
     char *ptr = temp_line;
     char buffer[WORD_SIZE];
     Bool expect_number = true;
 
-    while(token!=NULL){
-        strcat(temp_line, token);
-        token = strtok(NULL, "\n");
+    while(line != NULL){
+        strcat(temp_line, line);
+        line = strtok(NULL, "\n");
     }
 
     memset(buffer, 0, sizeof(buffer));
@@ -353,7 +353,7 @@ Bool parse_line_data(char *token, int *array, size_t *size) {
             }
             *buf_ptr = '\0';
 
-            if (*buffer == '\0' || !is_number(buffer)){
+            if (*buffer == '\0' || !isNumber(buffer)){
                 return false;
             } 
 
@@ -388,7 +388,7 @@ Bool parse_line_data(char *token, int *array, size_t *size) {
     return true;
 }
 
-Bool parse_line_string(char *token, int *array, size_t *size){
+Bool parseLineString(char *token, int *array, size_t *size){
     char temp_line[MAX_LINE] = "";
     int i = 1;
     *size = 0;
