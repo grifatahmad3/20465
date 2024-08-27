@@ -693,12 +693,107 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
             break;
         }
 
-        if(strcmp(operation->name, "mov")==0){
-            
+        if(strcmp(operation->name, "lea")==0){
+            if(type1!=dir || type2==imm){
+                addERR(err, ILLEGAL_FORMAT, line_num);
+                return false;
+            }
+            if(addMachineCode(inst, code_line1, *IC, inSymbol==true?symbolName:NULL)==false){
+                addERR(err, MALLOC_ERROR, line_num);
+                return false;
+            }
+            if(inSymbol==true){
+                temp_symbol = findSymbol(symbols, symbolName);
+                temp_symbol->address = *IC;
+                temp_symbol->sfor = forInst;
+            }
+            (*IC)++;
+            if(addMachineCode(inst, code_line2, *IC, NULL)==false){
+                addERR(err, MALLOC_ERROR, line_num);
+                return false;
+            }
+            (*IC)++;
+            if(addMachineCode(inst, code_line3, *IC, NULL)==false){
+                addERR(err, MALLOC_ERROR, line_num);
+                return false;
+            }
+            (*IC)++;
         }
+        
+        if(strcmp(operation->name, "cmp")==0){
+            if(addMachineCode(inst, code_line1, *IC, inSymbol==true?symbolName:NULL)==false){
+                addERR(err, MALLOC_ERROR, line_num);
+                return false;
+            }
+            if(inSymbol==true){
+                temp_symbol = findSymbol(symbols, symbolName);
+                temp_symbol->address = *IC;
+                temp_symbol->sfor = forInst;
+            }
+            (*IC)++;
+            if((type1==regDir || type1==regIndir) && (type2==regDir || type2==regIndir)){
+                code_line2 += code_line3;
+                if(addMachineCode(inst, code_line2, *IC, NULL)==false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    return false;
+                }
+                (*IC)++;
+            }
+            else{
+                if(addMachineCode(inst, code_line2, *IC, NULL)==false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    return false;
+                }
+                (*IC)++;
+                if(addMachineCode(inst, code_line3, *IC, NULL)==false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    return false;
+                }
+                (*IC)++;
+            }
+        }
+
+        else{
+            if(type2==imm){
+                addERR(err, ILLEGAL_FORMAT, line_num);
+                return false;
+            }
+            if(addMachineCode(inst, code_line1, *IC, inSymbol==true?symbolName:NULL)==false){
+                addERR(err, MALLOC_ERROR, line_num);
+                return false;
+            }
+            if(inSymbol==true){
+                temp_symbol = findSymbol(symbols, symbolName);
+                temp_symbol->address = *IC;
+                temp_symbol->sfor = forInst;
+            }
+            (*IC)++;
+            if((type1==regDir || type1==regIndir) && (type2==regDir || type2==regIndir)){
+                code_line2 += code_line3;
+                if(addMachineCode(inst, code_line2, *IC, NULL)==false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    return false;
+                }
+                (*IC)++;
+            }
+            else{
+                if(addMachineCode(inst, code_line2, *IC, NULL)==false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    return false;
+                }
+                (*IC)++;
+                if(addMachineCode(inst, code_line3, *IC, NULL)==false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    return false;
+                }
+                (*IC)++;
+            }
+        }
+        
     return true;
    }
 
+   return false;
 }
 
 Bool parseTwoOperands(char *token, char *word1, char *word2) {
