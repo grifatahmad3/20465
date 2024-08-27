@@ -258,23 +258,44 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
             continue;
         }
 
-        /*TODO:
-        step 10*/
-        
-        /*10- if isSymbol==true: - if it does exist with address!=0, add err.
-    *                          - if it does exist with address==0, update it with sfor=forInst, address=IC, and add the line
-    *                                to MachineCode **inst with the first line having label=symbol
-    *                          - if it doesn't exist, add to Symbols with sfor=forInst, type=none, address=IC 
-    *                               and add the line to MachineCode **inst with the first line having label=symbol
-    *   11- search if the first token (maybe second symbol) is an operation. if it's not then err.
+        /*step 10*/
+        if(inSymbol==true){ /*this means we are in a line with a label and an instruction line, such as:- MAIN: add r1,r2*/
+            if((temp_symbol= findSymbol(symbols, temp_str)) != NULL && temp_symbol->address!=0){
+                addERR(err, ILLEGAL_SYMBOL_NAME, line_num);
+                continue;
+            }
+            if(temp_symbol != NULL && temp_symbol->address==0){
+                temp_symbol->sfor = forInst;
+                temp_symbol->address = *IC;
+                /*add the line to MachineCode**inst in the coming step, with label=symbol_name if (inSymbol==true) to the first line*/
+            }
+            if(temp_symbol==NULL){
+                if(addSymbol(symbols, temp_str, *IC, forInst, none)==false){
+                    addERR(err, MALLOC_ERROR, line_num);
+                    /*add the line to MachineCode**inst in the coming step, with label=symbol_name if (inSymbol==true) to the first line*/
+                    continue;
+                }
+            }
+        }
+
+        /*step 11*/
+        if(findOP(token)!=-1){
+            /*the rest of the steps*/
+            /*
     *   12- proccess the line into machine code and calculate how much binary lines are needed (= L).
     *       build the code and add to MachineCode **inst.
-    *   13- update IC = IC+L, jump to 2.
-    *   14- finished reading the file, if err!=NULL don't go to 2nd stage and print all errs.*/
+    *   13- update IC = IC+L, jump to 2.*/
+
+        }
+        else{
+            addERR(err, ILLEGAL_FORMAT, line_num);
+            continue; /*unnecessary, exists to stress the idea that we continue to find all errors*/
+        }
+        
         
     }
 
-
+    /*step 14*/
     fclose(fpr);
     free(filer);
     if(*err!=NULL){
