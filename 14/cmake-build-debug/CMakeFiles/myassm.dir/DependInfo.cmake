@@ -12,6 +12,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/user/projects/20465/14/firstpass.c" "CMakeFiles/myassm.dir/firstpass.c.o" "gcc" "CMakeFiles/myassm.dir/firstpass.c.o.d"
   "/home/user/projects/20465/14/myassm.c" "CMakeFiles/myassm.dir/myassm.c.o" "gcc" "CMakeFiles/myassm.dir/myassm.c.o.d"
   "/home/user/projects/20465/14/preasm.c" "CMakeFiles/myassm.dir/preasm.c.o" "gcc" "CMakeFiles/myassm.dir/preasm.c.o.d"
+  "/home/user/projects/20465/14/secondpass.c" "CMakeFiles/myassm.dir/secondpass.c.o" "gcc" "CMakeFiles/myassm.dir/secondpass.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

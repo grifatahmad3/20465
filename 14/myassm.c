@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
     MachineCode *inst; /*the instructions body*/
     MachineCode *data; /*the data body*/
     int i = 1;
-    int IC=0, DC=0;
+    int IC=100, DC=1;
 
 
     macros = NULL;

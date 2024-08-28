@@ -7,6 +7,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/myassm.dir/myassm.c.o.d"
   "CMakeFiles/myassm.dir/preasm.c.o"
   "CMakeFiles/myassm.dir/preasm.c.o.d"
+  "CMakeFiles/myassm.dir/secondpass.c.o"
+  "CMakeFiles/myassm.dir/secondpass.c.o.d"
   "myassm"
   "myassm.pdb"
 )

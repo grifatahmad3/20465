@@ -1,1 +1,1 @@
-/usr/bin/cc -g CMakeFiles/myassm.dir/myassm.c.o CMakeFiles/myassm.dir/essentials.c.o CMakeFiles/myassm.dir/preasm.c.o CMakeFiles/myassm.dir/firstpass.c.o -o myassm
+/usr/bin/cc -g CMakeFiles/myassm.dir/myassm.c.o CMakeFiles/myassm.dir/essentials.c.o CMakeFiles/myassm.dir/preasm.c.o CMakeFiles/myassm.dir/firstpass.c.o CMakeFiles/myassm.dir/secondpass.c.o -o myassm

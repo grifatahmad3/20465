@@ -225,6 +225,30 @@ preasm.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/myassm.dir/build.make CMakeFiles/myassm.dir/preasm.c.s
 .PHONY : preasm.c.s
 
+secondpass.o: secondpass.c.o
+.PHONY : secondpass.o
+
+# target to build an object file
+secondpass.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/myassm.dir/build.make CMakeFiles/myassm.dir/secondpass.c.o
+.PHONY : secondpass.c.o
+
+secondpass.i: secondpass.c.i
+.PHONY : secondpass.i
+
+# target to preprocess a source file
+secondpass.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/myassm.dir/build.make CMakeFiles/myassm.dir/secondpass.c.i
+.PHONY : secondpass.c.i
+
+secondpass.s: secondpass.c.s
+.PHONY : secondpass.s
+
+# target to generate assembly for a file
+secondpass.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/myassm.dir/build.make CMakeFiles/myassm.dir/secondpass.c.s
+.PHONY : secondpass.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -246,6 +270,9 @@ help:
 	@echo "... preasm.o"
 	@echo "... preasm.i"
 	@echo "... preasm.s"
+	@echo "... secondpass.o"
+	@echo "... secondpass.i"
+	@echo "... secondpass.s"
 .PHONY : help
 
 

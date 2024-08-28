@@ -12,29 +12,29 @@ Bool startSecondPass(char *filename, ERR **err, Symbol **symbols, MachineCode **
     Bool isob=true, isent=false, isext=false;
     Symbol *temp_symbol;
     MachineCode *temp_mc;
-    int ic = *IC, dc = *DC;
-    (*IC) += STARTING_ADDRESS;
-    (*DC) += (*IC);
+    int ic = *IC - STARTING_ADDRESS, dc = *DC - 1;
+    /*(*IC) += STARTING_ADDRESS;*/
+    (*DC) +=  ((*IC)-1);
 
     temp_symbol = *symbols;
     while(temp_symbol!=NULL){
-        if(temp_symbol->address == -1){
+        if(temp_symbol->address == 0){
             printf("Invalid address for symbol: %s\n", temp_symbol->name);
             addERR(err, "Above message!\n", -1);
             return false;
         }
         if(temp_symbol->type == ext){
             isext=true;
-            temp_symbol->address = 1;
+            temp_symbol->address = 0+E_FIELD;
         }
         if(temp_symbol->type == ent){
             isent = true;
         }
-        if(temp_symbol->sfor==forInst){
+        /*if(temp_symbol->sfor==forInst){
             temp_symbol->address += STARTING_ADDRESS;
-        }
-        if(temp_symbol->sfor==forData){
-            temp_symbol->address += (*IC);
+        }*/
+        if(temp_symbol->sfor==forData && temp_symbol->type!=ext){
+            temp_symbol->address += ((*IC)-1);
         }
         temp_symbol = temp_symbol->next;
     }
@@ -42,36 +42,44 @@ Bool startSecondPass(char *filename, ERR **err, Symbol **symbols, MachineCode **
 
     temp_mc = *inst;
     while(temp_mc != NULL){
-
-        if((temp_symbol=findSymbol(symbols, temp_mc->label)) != NULL){
-            if(temp_mc->code==-1){
-                if(temp_symbol->type!=ext){
-                temp_mc->code = BITS3_14(temp_symbol->address);
-                temp_mc->code +=R_FIELD;
+        if(temp_mc->label != NULL){
+            if((temp_symbol=findSymbol(symbols, temp_mc->label)) != NULL){
+                if(temp_symbol->type==ext){
+                    temp_mc->code=0+E_FIELD;
                 }
-                else {
-                    temp_mc->code = 1;
-                }
-            }
-        }
-
-        temp_mc->address += STARTING_ADDRESS;
-        temp_mc = temp_mc->next;
-    }
-    temp_mc = *data;
-    while (temp_mc!=NULL){
-        if((temp_symbol=findSymbol(symbols, temp_mc->label)) != NULL){
-            if(temp_mc->code==-1){
-                if(temp_symbol->type!=ext){
+                if(temp_mc->code==0 && temp_symbol->type!=ext){
                     temp_mc->code = BITS3_14(temp_symbol->address);
                     temp_mc->code +=R_FIELD;
                 }
-                else {
-                    temp_mc->code = 1;
+            }
+        }
+    /*temp_mc->address += STARTING_ADDRESS;*/
+    temp_mc = temp_mc->next;
+    }
+    temp_mc = *data;
+    while (temp_mc!=NULL){
+        if(temp_mc->label!=NULL){
+            if((temp_symbol=findSymbol(symbols, temp_mc->label)) != NULL){
+                /*if(temp_mc->code==0){
+                    if(temp_symbol->type!=ext){
+                        temp_mc->code = BITS3_14(temp_symbol->address);
+                        temp_mc->code +=R_FIELD;
+                    }
+                    else {
+                        temp_mc->code = 1;
+                    }
+                }*/
+                if(temp_symbol->type==ext){
+                    temp_mc->code=0+E_FIELD;
+                }
+                if(temp_mc->code==0 && temp_symbol->type!=ext){
+                    temp_mc->code = BITS3_14(temp_symbol->address);
+                    temp_mc->code +=R_FIELD;
                 }
             }
         }
-        temp_mc->address += (*IC);
+
+        temp_mc->address += ((*IC)-1);
         temp_mc = temp_mc->next;
     }
     
@@ -91,19 +99,19 @@ Bool startSecondPass(char *filename, ERR **err, Symbol **symbols, MachineCode **
         temp_mc = *inst;
         while(temp_mc!=NULL){
             fprintf(fpr_ob, "\n");
-            fprintf(fpr_ob, "%4.4d %5.5o", temp_mc->address, temp_mc->code);
+            fprintf(fpr_ob, "%4.4d %.5o", temp_mc->address, temp_mc->code & 077777);
             temp_mc = temp_mc->next;
         }
         temp_mc = *data;
         while(temp_mc!=NULL){
             fprintf(fpr_ob, "\n");
-            fprintf(fpr_ob, "%4.4d %5.5o", temp_mc->address, temp_mc->code);
+            fprintf(fpr_ob, "%4.4d %.5o", temp_mc->address, temp_mc->code & 077777);
             temp_mc = temp_mc->next;
         }
     }
 
     if(isext==true){
-        file_ext = addExtToFilename(EXT_OBJECT, filename, strlen(EXT_OBJECT));
+        file_ext = addExtToFilename(EXT_EXTERNALS, filename, strlen(EXT_EXTERNALS));
         if(file_ext==NULL){
             addERR(err, MALLOC_ERROR, -1);
             if(isob==true){
@@ -125,8 +133,10 @@ Bool startSecondPass(char *filename, ERR **err, Symbol **symbols, MachineCode **
 
         temp_mc = *inst;
         while(temp_mc!=NULL){
-            if((temp_symbol = findSymbol(symbols, temp_mc->label))!=NULL && temp_symbol->type==ext){
-                fprintf(fpr_ext, "%s %d\n", temp_symbol->name, temp_mc->address);
+            if(temp_mc->label!=NULL){
+                if((temp_symbol = findSymbol(symbols, temp_mc->label))!=NULL && temp_symbol->type==ext){
+                    fprintf(fpr_ext, "%s %4.4d\n", temp_symbol->name, temp_mc->address);
+                }
             }
             temp_mc=temp_mc->next;
         }
@@ -135,7 +145,7 @@ Bool startSecondPass(char *filename, ERR **err, Symbol **symbols, MachineCode **
     
 
     if(isent==true){
-        file_ent = addExtToFilename(EXT_OBJECT, filename, strlen(EXT_OBJECT));
+        file_ent = addExtToFilename(EXT_ENTRIES, filename, strlen(EXT_ENTRIES));
         if(file_ent==NULL){
             addERR(err, MALLOC_ERROR, -1);
             if(isob==true){
@@ -162,14 +172,42 @@ Bool startSecondPass(char *filename, ERR **err, Symbol **symbols, MachineCode **
             }
             return false;
         }
-        temp_symbol = *symbols;
+        /*temp_symbol = *symbols;
         while(temp_symbol!=NULL){
             if(temp_symbol->type==ent){
-                fprintf(fpr_ent, "%s %d\n", temp_symbol->name, temp_symbol->address);
+                fprintf(fpr_ent, "%s %4.4d\n", temp_symbol->name, temp_symbol->address);
             }
             temp_symbol=temp_symbol->next;
+        }*/
+        temp_mc = *inst;
+        while(temp_mc != NULL){
+            if(temp_mc->label!=NULL && (temp_symbol= findSymbol(symbols, temp_mc->label)) != NULL &&
+                temp_symbol->type==ent){
+                fprintf(fpr_ent, "%s %4.4d\n", temp_symbol->name, temp_symbol->address);
+            }
+            temp_mc = temp_mc->next;
         }
+        /*temp_mc = *data;
+        while(temp_mc != NULL){
+            if(temp_mc->label!=NULL && (temp_symbol= findSymbol(symbols, temp_mc->label)) != NULL &&
+               temp_symbol->type==ent){
+                fprintf(fpr_ent, "%s %4.4d\n", temp_symbol->name, temp_symbol->address);
+            }
+            temp_mc = temp_mc->next;
+        }*/
     }
 
+    if(isob==true){
+        free(file_ob);
+        fclose(fpr_ob);
+    }
+    if(isext==true){
+        free(file_ext);
+        fclose(fpr_ext);
+    }
+    if(isent==true){
+        free(file_ent);
+        fclose(fpr_ent);
+    }
     return true;
 }
