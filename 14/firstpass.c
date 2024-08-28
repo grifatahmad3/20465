@@ -242,11 +242,11 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
                     addERR(err, ILLEGAL_SYMBOL_NAME, line_num);
                     continue;
                 }
-                if((temp_symbol= findSymbol(symbols, token)) != NULL && temp_symbol->address!=0){
+                /*ERROR HERE*/
+                if((temp_symbol= findSymbol(symbols, token)) != NULL && temp_symbol->type==none){
                     temp_symbol->type = ent;
-                    /*** LOOK HERE */
                 }
-                if(temp_symbol != NULL && (temp_symbol->address == 0 || temp_symbol->type==ext)){
+                if(temp_symbol != NULL && /*(temp_symbol->address == 0 || ) */temp_symbol->type==ext){
                     addERR(err, ILLEGAL_SYMBOL_NAME, line_num);
                     continue;
                 }
@@ -477,8 +477,9 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
         }
         case dir:{
             if(inSymbol == true && strcmp(token, symbolName)==0){
-                addERR(err, ILLEGAL_FORMAT, line_num);
-                return false;
+                /*addERR(err, ILLEGAL_FORMAT, line_num);
+                return false;*/
+                printf("WARNING: At line: %d, operand name is the same as a label name!\n", line_num);
             }
             code_line1 += (BITS3_6(DIR_ACCESS));
             if((temp_symbol=findSymbol(symbols, token))!=NULL){
@@ -626,8 +627,9 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
         }
         case dir:{
             if(inSymbol==true && strcmp(opr1, symbolName)==0){
-                addERR(err, ILLEGAL_FORMAT, line_num);
-                return false;
+                /*addERR(err, ILLEGAL_FORMAT, line_num);
+                return false;*/
+                printf("WARNING: At line: %d, operand name is the same as a label name!\n", line_num);
             }
             code_line1 += (BITS7_10(DIR_ACCESS));
             if((temp_symbol=findSymbol(symbols, opr1))!=NULL){
@@ -688,8 +690,9 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
         }
         case dir:{
             if(inSymbol==true && strcmp(opr2, symbolName)==0){
-                addERR(err, ILLEGAL_FORMAT, line_num);
-                return false;
+                /*addERR(err, ILLEGAL_FORMAT, line_num);
+                return false;*/
+                printf("WARNING: At line: %d, operand name is the same as a label name!\n", line_num);
             }
             code_line1 += (BITS3_6(DIR_ACCESS));
             if((temp_symbol=findSymbol(symbols, opr2))!=NULL){

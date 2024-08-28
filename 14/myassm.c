@@ -18,13 +18,14 @@ int main(int argc, char *argv[]){
     int IC=100, DC=1;
 
 
-    macros = NULL;
-    symbols = NULL;
-    inst = NULL;
-    data = NULL;
+
 
     while(i < argc){
-        err = NULL; /*new err list for each file*/
+        err = NULL; /*new lists for each file*/
+        macros = NULL;
+        symbols = NULL;
+        inst = NULL;
+        data = NULL;
 
         printf("\nFile: %s.as\n\n", argv[i]);
         printf(PREASSM_START);
@@ -69,29 +70,29 @@ int main(int argc, char *argv[]){
 
         
         i++;
-        /*new error list for each file*/
+        /*new lists for each file*/
         if(err!=NULL){
             freeERR(&err);
         }
-
+        if(macros != NULL){
+            freeMacros(&macros);
+        }
+        if(symbols!=NULL){
+            freeSymbols(&symbols);
+        }
+        if(inst!=NULL){
+            freeMCs(&inst);
+        }
+        if(data!=NULL){
+            freeMCs(&data);
+        }
         /*printSymbols(&symbols);
         printMachineCode(&inst);
         printMachineCode(&data);*/
         
     }
 
-    /* before exiting*/
-    if(macros != NULL){
-        freeMacros(&macros);
-    }
-    if(symbols!=NULL){
-        freeSymbols(&symbols);
-    }
-    if(inst!=NULL){
-        freeMCs(&inst);
-    }
-    if(data!=NULL){
-        freeMCs(&data);
-    }
+
+
     return 0;
 }

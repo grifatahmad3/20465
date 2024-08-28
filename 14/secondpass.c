@@ -106,7 +106,7 @@ Bool startSecondPass(char *filename, ERR **err, Symbol **symbols, MachineCode **
             free(file_ob);
             return false;
         }
-        fprintf(fpr_ob, "%4d %4d", ic, dc);
+        fprintf(fpr_ob, "%4d %d", ic, dc);
         temp_mc = *inst;
         while(temp_mc!=NULL){
             fprintf(fpr_ob, "\n");
@@ -151,6 +151,7 @@ Bool startSecondPass(char *filename, ERR **err, Symbol **symbols, MachineCode **
             }
             temp_mc=temp_mc->next;
         }
+
             
     }
     
@@ -183,29 +184,14 @@ Bool startSecondPass(char *filename, ERR **err, Symbol **symbols, MachineCode **
             }
             return false;
         }
-        /*temp_symbol = *symbols;
+        temp_symbol = *symbols;
         while(temp_symbol!=NULL){
             if(temp_symbol->type==ent){
                 fprintf(fpr_ent, "%s %4.4d\n", temp_symbol->name, temp_symbol->address);
             }
             temp_symbol=temp_symbol->next;
-        }*/
-        temp_mc = *inst;
-        while(temp_mc != NULL){
-            if(temp_mc->label!=NULL && (temp_symbol= findSymbol(symbols, temp_mc->label)) != NULL &&
-                temp_symbol->type==ent){
-                fprintf(fpr_ent, "%s %4.4d\n", temp_symbol->name, temp_symbol->address);
-            }
-            temp_mc = temp_mc->next;
         }
-        /*temp_mc = *data;
-        while(temp_mc != NULL){
-            if(temp_mc->label!=NULL && (temp_symbol= findSymbol(symbols, temp_mc->label)) != NULL &&
-               temp_symbol->type==ent){
-                fprintf(fpr_ent, "%s %4.4d\n", temp_symbol->name, temp_symbol->address);
-            }
-            temp_mc = temp_mc->next;
-        }*/
+
     }
 
     if(isob==true){
