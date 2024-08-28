@@ -475,4 +475,22 @@ OprType findOprType(char *token){
     return noOp;
 }
 
+void freeAllStructs(ERR **err, Macro **macros, Symbol **symbols, MachineCode **inst, MachineCode **data){
+    if(*err!=NULL){
+            freeERR(err);
+        }
+    if(*macros != NULL){
+        freeMacros(macros);
+    }
+    if(*symbols!=NULL){
+        freeSymbols(symbols);
+    }
+    if(*inst!=NULL){
+        freeMCs(inst);
+    }
+    if(data!=NULL){
+        freeMCs(data);
+    }
+}
+
 /*End Functions*/

@@ -157,7 +157,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
             /*  TODO:
             step 7 */
             if(strcmp(token, DATA)==0){
-                token = strtok(NULL, " \t\n");
+                token = strtok(NULL, "\n");
                 if(token==NULL){
                     addERR(err, ILLEGAL_FORMAT, line_num);
                     continue;
@@ -177,7 +177,7 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
             }
 
             else if(strcmp(token, STRING) == 0){
-                token = strtok(NULL, " \t\n");
+                token = strtok(NULL, "\n");
                 if(token==NULL){
                     addERR(err, ILLEGAL_FORMAT, line_num);
                     continue;

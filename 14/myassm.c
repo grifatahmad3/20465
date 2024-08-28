@@ -32,8 +32,9 @@ int main(int argc, char *argv[]){
         if(startPreAsm(argv[i], &macros, &err) == false){
             if(err!=NULL){
                 printERR(&err);
-                freeERR(&err);
+                /*freeERR(&err);*/
             }
+            freeAllStructs(&err, &macros, &symbols, &inst, &data);
             i++;
             continue;
             }
@@ -46,8 +47,9 @@ int main(int argc, char *argv[]){
         if(startFirstPass(argv[i], &macros, &err, &symbols, &IC, &DC, &inst, &data) == false){
             if(err!=NULL){
                 printERR(&err);
-                freeERR(&err);
+                /*freeERR(&err);*/
             }
+            freeAllStructs(&err, &macros, &symbols, &inst, &data);
             i++;
             continue;
         }
@@ -60,8 +62,9 @@ int main(int argc, char *argv[]){
         if(startSecondPass(argv[i], &err, &symbols, &inst, &data, &IC, &DC)==false){
             if(err!=NULL){
                 printERR(&err);
-                freeERR(&err);
+                /*freeERR(&err);*/
             }
+            freeAllStructs(&err, &macros, &symbols, &inst, &data);
             i++;
             continue;
         }
@@ -71,21 +74,7 @@ int main(int argc, char *argv[]){
         
         i++;
         /*new lists for each file*/
-        if(err!=NULL){
-            freeERR(&err);
-        }
-        if(macros != NULL){
-            freeMacros(&macros);
-        }
-        if(symbols!=NULL){
-            freeSymbols(&symbols);
-        }
-        if(inst!=NULL){
-            freeMCs(&inst);
-        }
-        if(data!=NULL){
-            freeMCs(&data);
-        }
+        freeAllStructs(&err, &macros, &symbols, &inst, &data);
         /*printSymbols(&symbols);
         printMachineCode(&inst);
         printMachineCode(&data);*/

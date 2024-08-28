@@ -217,4 +217,8 @@ void printMachineCode(MachineCode **head);
 OprType findOprType(char *token);
 /*End Functions*/
 
+    /*frees all struct if they exist*/
+void freeAllStructs(ERR **err, Macro **macros, Symbol **symbols, MachineCode **inst, MachineCode **data);
+
+
 #endif
