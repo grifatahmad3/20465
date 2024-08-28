@@ -69,6 +69,7 @@ int main(int argc, char *argv[]){
 
         
         i++;
+        /*new error list for each file*/
         if(err!=NULL){
             freeERR(&err);
         }

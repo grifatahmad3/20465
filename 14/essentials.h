@@ -1,7 +1,9 @@
 /* This files should include all essential declarations and important definitions 
 *   that will be needed by most or all files in the project.
 *   This includes functions that might be needed by more than one file, 
-*   data structures, and so on. */
+*   data structures, and so on.
+*  Can be split in the future if necessary to multiple files, but as of 08/2024 I see no
+*   need to do so as the current split of files makes more sense to me*/
 
 #ifndef ESSENTIALSH
 #define ESSENTIALSH
@@ -22,10 +24,10 @@
 #define LINE_TOO_LONG "Overflow: The line is too long!\n"
 #define FILE_ERROR "File Error! Can't open or create file!!\n"
 #define MACRO_ADD_FAIL "Failed creating a new macro!\n"
-#define TOO_MUCH_ARGUMENTS "Too much Arguemnts! expected less...\n"
+#define TOO_MUCH_ARGUMENTS "Too much Arguments! expected less...\n"
 #define WORD_FAILED "Failed reading word!\n"
 #define ILLEGAL_MACRO_NAME "Illegal macro name!\n"
-#define RAM_EMPTY "Out of RAM! No availabe RAM...\n"
+#define RAM_EMPTY "Out of RAM! No available RAM...\n"
 #define ILLEGAL_SYMBOL_NAME "Illegal symbol name!\n"
 #define SYMBOL_EXISTS "Symbol with such name already exists!\n"
 #define SYMBOL_EMPTY "Illegal! Empty symbol declaration!\n"

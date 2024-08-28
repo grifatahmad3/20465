@@ -10,8 +10,8 @@
 
     /*  The Algorithm
     *
-    *   1- set IC=0, DC=0;
-    *   2- read next line. if EOF then jump to 14. if (IC+DC) > (RAM_SIZE-STARTING_ADDRESS) then err. if empty line or comment then skip.
+    *   1- set IC=100, DC=1;
+    *   2- read next line. if EOF then jump to 14. if (IC+DC) > (RAM_SIZE+1) then err. if empty line or comment then skip.
     *   3- is the first field(token) a symbol? if yes and second token is .entry or .extern jump to 8, or if no jump to step 5
     *   4- set flag isSymbol=true;
     *   5- is this data command (.data or .string)?, if no jump to step 8
