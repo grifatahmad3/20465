@@ -66,6 +66,8 @@ Bool startFirstPass(char* filename, Macro **macros, ERR **err, Symbol **symbols,
     size_t array_size;
     int index = 0;
 
+    /*  These start like to fit the implementation of the algorithm explained above.
+     * Specifically, to set the address of an encountered symbol that hasn't been defined yet to 0*/
     (*IC) = 100; /*step 1*/
     (*DC) = 1;
     

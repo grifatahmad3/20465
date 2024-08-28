@@ -7,6 +7,17 @@
 
 Bool startSecondPass(char *filename, ERR **err, Symbol **symbols, MachineCode **inst, MachineCode **data, int *IC, int *DC){
 
+    /*
+     * The idea behind the algorithm was to not actually need to read the file 2 times, but instead
+     * to save all symbols encountered in the symbols table, and if the symbol is not yet known
+     * what address will be it be then will be saved with address 0 and updated later when encoutered.
+     * Here we check if any symbol stayed with address 0, which would mean it was encountered but had
+     * no definition to the address. Otherwise, this will update the correct address in the MachineCode
+     * lines to the correct symbol address.
+     * Aside from that, this will create the files .ob, .ent, and .ext as needed and prints all the
+     * necessary information in them.
+     * returns false if a symbol passed first pass with address = 0, or if anything else failed.*/
+
     char *file_ob, *file_ent, *file_ext;
     FILE *fpr_ob, *fpr_ent, *fpr_ext;
     Bool isob=true, isent=false, isext=false;
