@@ -405,6 +405,9 @@ Bool parseLineString(char *token, int *array, size_t *size){
         token = strtok(NULL, "\n");
     }
     for(i=1; i<MAX_LINE; i++){
+        if(!isprint(temp_line[i])){
+            return false;
+        }
         if(temp_line[i] == '\"'){
             if(i<MAX_LINE-2 && temp_line[i+1]){
                 return false;
@@ -452,7 +455,7 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
 
 
    if(operation->opr_num==1){
-        code_line1 += (BITS11_14(operation->opcode) + A_FIELD);
+        code_line1 |= (BITS11_14(operation->opcode) | A_FIELD);
         token = strtok(NULL, " \t\n");
         if(token == NULL){
             addERR(err, ILLEGAL_FORMAT, line_num);
@@ -471,8 +474,8 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
                 addERR(err, NUM_OUT_OF_BOUND, line_num);
                 return false;
             }
-            code_line1 += (BITS3_6(IMM_ACCESS));
-            code_line2 = BITS3_14(lateral)+A_FIELD;
+            code_line1 |= (BITS3_6(IMM_ACCESS));
+            code_line2 |= (BITS3_14(lateral)|A_FIELD);
             break;
         }
         case dir:{
@@ -481,9 +484,9 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
                 return false;*/
                 printf("WARNING: At line: %d, operand name is the same as a label name!\n", line_num);
             }
-            code_line1 += (BITS3_6(DIR_ACCESS));
+            code_line1 |= (BITS3_6(DIR_ACCESS));
             if((temp_symbol=findSymbol(symbols, token))!=NULL){
-                code_line2 = BITS3_14((temp_symbol->address));
+                code_line2 |= BITS3_14((temp_symbol->address));
                 if(temp_symbol->type!=ext){
                     code_line2 |= (R_FIELD);
                 }
@@ -503,13 +506,13 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
         }
 
         case regDir:{
-            code_line1 += (BITS3_6(DIR_REG_ACCESS));
-            code_line2 += (BITS3_5(findReg(token)) + A_FIELD);
+            code_line1 |= (BITS3_6(DIR_REG_ACCESS));
+            code_line2 |= (BITS3_5(findReg(token)) | A_FIELD);
             break;
         }
         case regIndir:{
-            code_line1 += (BITS3_6(IND_REG_ACCESS));
-            code_line2 += (BITS3_5(findReg(token+1)) + A_FIELD);
+            code_line1 |= (BITS3_6(IND_REG_ACCESS));
+            code_line2 |= (BITS3_5(findReg(token+1)) | A_FIELD);
             break;
         }
         default:
@@ -593,7 +596,7 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
 
 
    if(operation->opr_num==2){
-    code_line1 += (BITS11_14(operation->opcode) + A_FIELD);
+    code_line1 |= (BITS11_14(operation->opcode) | A_FIELD);
         token = strtok(NULL, "\n");
         if(token == NULL){
             addERR(err, ILLEGAL_FORMAT, line_num);
@@ -621,8 +624,8 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
                 addERR(err, NUM_OUT_OF_BOUND, line_num);
                 return false;
             }
-            code_line1 += (BITS7_10(IMM_ACCESS));
-            code_line2 = BITS3_14(lateral)+A_FIELD;
+            code_line1 |= (BITS7_10(IMM_ACCESS));
+            code_line2 |= (BITS3_14(lateral)|A_FIELD);
             break;
         }
         case dir:{
@@ -631,14 +634,14 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
                 return false;*/
                 printf("WARNING: At line: %d, operand name is the same as a label name!\n", line_num);
             }
-            code_line1 += (BITS7_10(DIR_ACCESS));
+            code_line1 |= (BITS7_10(DIR_ACCESS));
             if((temp_symbol=findSymbol(symbols, opr1))!=NULL){
                 if(temp_symbol->address != 0 && temp_symbol->type!=ext){
-                    code_line2 = BITS3_14((temp_symbol->address));
-                    code_line2 += (R_FIELD);
+                    code_line2 |= BITS3_14((temp_symbol->address));
+                    code_line2 |= (R_FIELD);
                 }
                 else {
-                    code_line2 = temp_symbol->address;
+                    code_line2 |= temp_symbol->address;
                 }
                 if(temp_symbol->sfor==forNone){
                     temp_symbol->sfor=forData;
@@ -663,13 +666,13 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
         }
 
         case regDir:{
-            code_line1 += (BITS7_10(DIR_REG_ACCESS));
-            code_line2 += (BITS6_8(findReg(opr1)) + A_FIELD);
+            code_line1 |= (BITS7_10(DIR_REG_ACCESS));
+            code_line2 |= (BITS6_8(findReg(opr1)) | A_FIELD);
             break;
         }
         case regIndir:{
-            code_line1 += (BITS7_10(IND_REG_ACCESS));
-            code_line2 += (BITS6_8(findReg(opr1+1)) + A_FIELD);
+            code_line1 |= (BITS7_10(IND_REG_ACCESS));
+            code_line2 |= (BITS6_8(findReg(opr1+1)) | A_FIELD);
             break;
         }
         default:
@@ -684,8 +687,8 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
                 addERR(err, NUM_OUT_OF_BOUND, line_num);
                 return false;
             }
-            code_line1 += (BITS3_6(IMM_ACCESS));
-            code_line3 = BITS3_14(lateral)+A_FIELD;
+            code_line1 |= (BITS3_6(IMM_ACCESS));
+            code_line3 |= (BITS3_14(lateral)|A_FIELD);
             break;
         }
         case dir:{
@@ -694,15 +697,15 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
                 return false;*/
                 printf("WARNING: At line: %d, operand name is the same as a label name!\n", line_num);
             }
-            code_line1 += (BITS3_6(DIR_ACCESS));
+            code_line1 |= (BITS3_6(DIR_ACCESS));
             if((temp_symbol=findSymbol(symbols, opr2))!=NULL){
                 
                 if(temp_symbol->address != 0 && temp_symbol->type!=ext){
-                    code_line3 = BITS3_14((temp_symbol->address));
-                    code_line3 += (R_FIELD);
+                    code_line3 |= BITS3_14((temp_symbol->address));
+                    code_line3 |= (R_FIELD);
                 }
                 else {
-                    code_line3 = temp_symbol->address;
+                    code_line3 |= temp_symbol->address;
                 }
                 /*
                 if(temp_symbol->address!=-1){
@@ -726,13 +729,13 @@ Bool proccessInstLine(ERR **err, MachineCode **inst, int *IC, char *token, Bool 
         }
 
         case regDir:{
-            code_line1 += (BITS3_6(DIR_REG_ACCESS));
-            code_line3 += (BITS3_5(findReg(opr2)) + A_FIELD);
+            code_line1 |= (BITS3_6(DIR_REG_ACCESS));
+            code_line3 |= (BITS3_5(findReg(opr2)) | A_FIELD);
             break;
         }
         case regIndir:{
-            code_line1 += (BITS3_6(IND_REG_ACCESS));
-            code_line3 += (BITS3_5(findReg(opr2+1)) + A_FIELD);
+            code_line1 |= (BITS3_6(IND_REG_ACCESS));
+            code_line3 |= (BITS3_5(findReg(opr2+1)) | A_FIELD);
             break;
         }
         default:

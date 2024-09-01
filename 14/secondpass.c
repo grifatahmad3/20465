@@ -59,8 +59,8 @@ Bool startSecondPass(char *filename, ERR **err, Symbol **symbols, MachineCode **
                     temp_mc->code=0+E_FIELD;
                 }
                 if(temp_mc->code==0 && temp_symbol->type!=ext){
-                    temp_mc->code = BITS3_14(temp_symbol->address);
-                    temp_mc->code +=R_FIELD;
+                    temp_mc->code |= BITS3_14(temp_symbol->address);
+                    temp_mc->code |=R_FIELD;
                 }
             }
         }
@@ -84,8 +84,8 @@ Bool startSecondPass(char *filename, ERR **err, Symbol **symbols, MachineCode **
                     temp_mc->code=0+E_FIELD;
                 }
                 if(temp_mc->code==0 && temp_symbol->type!=ext){
-                    temp_mc->code = BITS3_14(temp_symbol->address);
-                    temp_mc->code +=R_FIELD;
+                    temp_mc->code |= BITS3_14(temp_symbol->address);
+                    temp_mc->code |=R_FIELD;
                 }
             }
         }
